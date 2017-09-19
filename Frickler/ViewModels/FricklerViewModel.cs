@@ -18,6 +18,10 @@ namespace Frickler.ViewModels
         /// Used from the View
         /// </summary>
         public IFiddlerConfiguration FiddlerConfiguration { get; }
+        /// <summary>
+        /// Used from the View
+        /// </summary>
+        public IFricklerTranslations FricklerTranslations { get; }
 
         /// <summary>
         /// construct the ViewModel
@@ -25,10 +29,11 @@ namespace Frickler.ViewModels
         /// <param name="fiddlerConfiguration">IFiddlerConfiguration</param>
         /// <param name="fiddlerModule">IFiddlerModule</param>
         [ImportingConstructor]
-        public FricklerViewModel(IFiddlerConfiguration fiddlerConfiguration, IFiddlerModule fiddlerModule)
+        public FricklerViewModel(IFiddlerConfiguration fiddlerConfiguration, IFiddlerModule fiddlerModule, IFricklerTranslations fricklerTranslations)
         {
             _fiddlerModule = fiddlerModule;
             FiddlerConfiguration = fiddlerConfiguration;
+            FricklerTranslations = fricklerTranslations;
         }
 
         /// <summary>
