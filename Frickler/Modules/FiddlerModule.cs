@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using Dapplo.Addons;
 using Dapplo.Log;
 using Fiddler;
 using Frickler.Configuration;
@@ -9,6 +10,7 @@ namespace Frickler.Modules
     /// The actual fiddler code
     /// </summary>
     [Export(typeof(IFiddlerModule))]
+    [StartupAction, ShutdownAction]
     public class FiddlerModule : IFiddlerModule
     {
         private static readonly LogSource Log = new LogSource();
@@ -25,15 +27,20 @@ namespace Frickler.Modules
         }
 
         /// <inheritdoc />
-        public void Startup()
+        public void Start()
         {
-            if (!_fiddlerConfiguration.IsEnabled)
+            if (!_fiddlerConfiguration.IsEnabled || FiddlerApplication.IsStarted())
             {
                 return;
             }
-            // Call Startup to tell FiddlerCore to begin listening on the specified port,
-            // and optionally register as the system proxy and optionally decrypt HTTPS traffic.
-            FiddlerApplication.Startup(_fiddlerConfiguration.ProxyPort, _fiddlerConfiguration.IsSystemProxy, false, false);
+			var startupFlags = FiddlerCoreStartupFlags.ChainToUpstreamGateway | FiddlerCoreStartupFlags.OptimizeThreadPool;
+	        if (_fiddlerConfiguration.IsSystemProxy)
+	        {
+		        startupFlags |= FiddlerCoreStartupFlags.RegisterAsSystemProxy;
+			}
+			// Call Startup to tell FiddlerCore to begin listening on the specified port,
+			// and optionally register as the system proxy and optionally decrypt HTTPS traffic.
+			FiddlerApplication.Startup(_fiddlerConfiguration.ProxyPort, startupFlags);
 
             // This enables the automatic authentication
             FiddlerApplication.BeforeRequest += OnBeforeRequest;
@@ -42,8 +49,12 @@ namespace Frickler.Modules
         /// <inheritdoc />
         public void Shutdown()
         {
-            FiddlerApplication.BeforeRequest -= OnBeforeRequest;
-            FiddlerApplication.Shutdown();
+	        if (!FiddlerApplication.IsStarted())
+	        {
+		        return;
+	        }
+	        FiddlerApplication.BeforeRequest -= OnBeforeRequest;
+	        FiddlerApplication.oProxy.Detach();
         }
 
         private void OnBeforeRequest(Session session)

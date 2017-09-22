@@ -6,7 +6,7 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Frickler")]
-[assembly: AssemblyDescription("A simple proxy based on fiddler")]
+[assembly: AssemblyDescription("A simple proxy tool based on fiddler")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Dapplo")]
 [assembly: AssemblyProduct("Frickler")]

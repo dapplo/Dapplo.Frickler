@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.Composition;
-using Caliburn.Micro;
-using Dapplo.CaliburnMicro;
+using Dapplo.CaliburnMicro.Configuration;
+using Dapplo.CaliburnMicro.Extensions;
 using Frickler.Configuration;
 using Frickler.Modules;
 
-namespace Frickler.ViewModels
+namespace Frickler.Ui.ViewModels
 {
     /// <summary>
-    /// The frickler ViewModel
+    /// The fiddler config ViewModel
     /// </summary>
-    [Export(typeof(IShell))]
-    public class FricklerViewModel : Screen, IShell
+    [Export(typeof(IConfigScreen))]
+    public sealed class FiddlerConfigViewModel : SimpleConfigScreen
     {
         private readonly IFiddlerModule _fiddlerModule;
 
@@ -28,12 +28,15 @@ namespace Frickler.ViewModels
         /// </summary>
         /// <param name="fiddlerConfiguration">IFiddlerConfiguration</param>
         /// <param name="fiddlerModule">IFiddlerModule</param>
+        /// <param name="fricklerTranslations">IFricklerTranslations</param>
         [ImportingConstructor]
-        public FricklerViewModel(IFiddlerConfiguration fiddlerConfiguration, IFiddlerModule fiddlerModule, IFricklerTranslations fricklerTranslations)
+        public FiddlerConfigViewModel(IFiddlerConfiguration fiddlerConfiguration, IFiddlerModule fiddlerModule, IFricklerTranslations fricklerTranslations)
         {
             _fiddlerModule = fiddlerModule;
+            Id = "C_Fiddler";
             FiddlerConfiguration = fiddlerConfiguration;
             FricklerTranslations = fricklerTranslations;
+            fricklerTranslations.CreateDisplayNameBinding(this, nameof(IFricklerTranslations.Title));
         }
 
         /// <summary>
@@ -42,7 +45,7 @@ namespace Frickler.ViewModels
         protected override void OnActivate()
         {
             base.OnActivate();
-            _fiddlerModule.Startup();
+            _fiddlerModule.Shutdown();
         }
 
         /// <summary>
@@ -51,7 +54,7 @@ namespace Frickler.ViewModels
         /// <param name="close"></param>
         protected override void OnDeactivate(bool close)
         {
-            _fiddlerModule.Shutdown();
+            _fiddlerModule.Start();
             base.OnDeactivate(close);
         }
     }

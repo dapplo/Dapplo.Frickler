@@ -4,6 +4,9 @@ using Dapplo.InterfaceImpl.Extensions;
 
 namespace Frickler.Configuration
 {
+    /// <summary>
+    /// This defines the configuration needed for Fiddler
+    /// </summary>
     [IniSection("Fiddler")]
     public interface IFiddlerConfiguration : IIniSection, INotifyPropertyChanged, IDefaultValue
     {
@@ -30,5 +33,5 @@ namespace Frickler.Configuration
         /// </summary>
         [DefaultValue(true)]
         bool IsSystemProxy { get; set; }
-    }
+	}
 }
