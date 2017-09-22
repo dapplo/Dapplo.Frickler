@@ -36,11 +36,11 @@ namespace Frickler.Modules
             _fiddlerConfiguration = fiddlerConfiguration;
         }
 
-	    /// <summary>
-	    ///     Setup the proxy environment
-	    /// </summary>
-	    /// <returns></returns>
-	    private IDisposable ModifyProxyEnvironment()
+        /// <summary>
+        ///     Setup the proxy environment variables
+        /// </summary>
+        /// <returns>IDisposable which returns the environment variables back to the original value when disposed</returns>
+        private IDisposable ModifyProxyEnvironment()
         {
             var httpsProxyFromEnvironmentVariable = Environment.GetEnvironmentVariable(HttpsProxyVariable, EnvironmentVariableTarget.Machine);
             var httpProxyFromEnvironmentVariable = Environment.GetEnvironmentVariable(HttpProxyVariable, EnvironmentVariableTarget.Machine);
@@ -51,6 +51,11 @@ namespace Frickler.Modules
             return Disposable.Create(() => SetProxyEnvironmentVariables(httpsProxyFromEnvironmentVariable, httpProxyFromEnvironmentVariable));
         }
 
+        /// <summary>
+        /// Apply the HTTP_PROXY and HTTPS_PROXY environment variables
+        /// </summary>
+        /// <param name="httpProxy">The url to the HTTP proxy</param>
+        /// <param name="httpsProxy">The url to the HTTPS proxy</param>
         private void SetProxyEnvironmentVariables(string httpProxy, string httpsProxy)
         {
             Environment.SetEnvironmentVariable(HttpProxyVariable, httpProxy, EnvironmentVariableTarget.Machine);
@@ -80,25 +85,47 @@ namespace Frickler.Modules
             FiddlerApplication.Startup(_fiddlerConfiguration.ProxyPort, startupFlags);
 
             // This enables the automatic authentication
-            FiddlerApplication.BeforeRequest += OnBeforeRequest;
+            if (_fiddlerConfiguration.AutomaticallyAuthenticate)
+            {
+                FiddlerApplication.BeforeRequest += OnBeforeRequest;
+            }
+            // This makes logging of error possible
+            FiddlerApplication.ResponseHeadersAvailable += OnResponseHeadersAvailable;
+        }
+
+        /// <summary>
+        /// Used for logging of request
+        /// </summary>
+        /// <param name="oSession">Session</param>
+        private void OnResponseHeadersAvailable(Session oSession)
+        {
+            if (oSession.ResponseHeaders.HTTPResponseCode < 400)
+            {
+                Log.Verbose().WriteLine("{0}|{1}", oSession.ResponseHeaders.HTTPResponseCode, oSession.fullUrl);
+                return;
+            }
+            Log.Error().WriteLine("{0}|{1}", oSession.ResponseHeaders.HTTPResponseCode, oSession.fullUrl);
         }
 
         /// <inheritdoc />
         public void Shutdown()
         {
+            FiddlerApplication.BeforeRequest -= OnBeforeRequest;
+            FiddlerApplication.ResponseHeadersAvailable -= OnResponseHeadersAvailable;
             if (!FiddlerApplication.IsStarted())
             {
                 return;
             }
             _proxyDisposable?.Dispose();
-            FiddlerApplication.BeforeRequest -= OnBeforeRequest;
             FiddlerApplication.oProxy.Detach();
         }
 
+        /// <summary>
+        /// Used to enable the proxy authentication
+        /// </summary>
+        /// <param name="session"></param>
         private void OnBeforeRequest(Session session)
         {
-            Log.Debug().WriteLine("Request to: {0}", session.fullUrl);
-
             if (_fiddlerConfiguration.AutomaticallyAuthenticate)
             {
                 // This enables the automatic authentication
