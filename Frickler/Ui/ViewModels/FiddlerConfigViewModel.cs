@@ -1,13 +1,17 @@
-﻿using System.ComponentModel.Composition;
+﻿#region Usings
+
+using System.ComponentModel.Composition;
 using Dapplo.CaliburnMicro.Configuration;
 using Dapplo.CaliburnMicro.Extensions;
 using Frickler.Configuration;
 using Frickler.Modules;
 
+#endregion
+
 namespace Frickler.Ui.ViewModels
 {
     /// <summary>
-    /// The fiddler config ViewModel
+    ///     The fiddler config ViewModel
     /// </summary>
     [Export(typeof(IConfigScreen))]
     public sealed class FiddlerConfigViewModel : SimpleConfigScreen
@@ -15,16 +19,17 @@ namespace Frickler.Ui.ViewModels
         private readonly IFiddlerModule _fiddlerModule;
 
         /// <summary>
-        /// Used from the View
+        ///     Used from the View
         /// </summary>
         public IFiddlerConfiguration FiddlerConfiguration { get; }
+
         /// <summary>
-        /// Used from the View
+        ///     Used from the View
         /// </summary>
         public IFricklerTranslations FricklerTranslations { get; }
 
         /// <summary>
-        /// construct the ViewModel
+        ///     construct the ViewModel
         /// </summary>
         /// <param name="fiddlerConfiguration">IFiddlerConfiguration</param>
         /// <param name="fiddlerModule">IFiddlerModule</param>
@@ -39,23 +44,12 @@ namespace Frickler.Ui.ViewModels
             fricklerTranslations.CreateDisplayNameBinding(this, nameof(IFricklerTranslations.Title));
         }
 
-        /// <summary>
-        /// Activate the ViewModel
-        /// </summary>
-        protected override void OnActivate()
+        /// <inheritdoc />
+        public override void Commit()
         {
-            base.OnActivate();
             _fiddlerModule.Shutdown();
-        }
-
-        /// <summary>
-        /// Deactivate the ViewModel
-        /// </summary>
-        /// <param name="close"></param>
-        protected override void OnDeactivate(bool close)
-        {
+            base.Commit();
             _fiddlerModule.Start();
-            base.OnDeactivate(close);
         }
     }
 }

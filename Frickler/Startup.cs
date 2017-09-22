@@ -1,10 +1,14 @@
-﻿using System;
+﻿#region Usings
+
+using System;
 using System.Globalization;
 using System.Threading;
 using System.Windows;
 using Dapplo.CaliburnMicro.Dapp;
 using Dapplo.Log;
 using Dapplo.Log.Loggers;
+
+#endregion
 
 namespace Frickler
 {

@@ -1,6 +1,10 @@
-﻿using System.ComponentModel;
+﻿#region Usings
+
+using System.ComponentModel;
 using Dapplo.CaliburnMicro.Translations;
 using Dapplo.Language;
+
+#endregion
 
 namespace Frickler.Configuration
 {
@@ -9,6 +13,9 @@ namespace Frickler.Configuration
     {
         [DefaultValue("Enable Fiddler")]
         string IsFiddlerEnabled { get; }
+
+        [DefaultValue("Manage HTTP_PROXY & HTTPS_PROXY")]
+        string ManageHttpProxy { get; }
 
         [DefaultValue("Automatically authenticate")]
         string AutomaticallyAutomaticallyAuthenticate { get; }
@@ -20,13 +27,12 @@ namespace Frickler.Configuration
         string ProxyPort { get; }
 
         /// <summary>
-        /// This describes the name of the configuration window and system tray icon
+        ///     This describes the name of the configuration window and system tray icon
         /// </summary>
         [DefaultValue("Configuration")]
         string Configuration { get; }
 
         [DefaultValue("Frickler")]
         string Title { get; }
-
     }
 }

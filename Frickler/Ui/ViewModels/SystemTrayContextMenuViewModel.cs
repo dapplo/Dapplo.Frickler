@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region Usings
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -11,10 +13,12 @@ using Dapplo.CaliburnMicro.NotifyIconWpf.ViewModels;
 using Frickler.Configuration;
 using MahApps.Metro.IconPacks;
 
+#endregion
+
 namespace Frickler.Ui.ViewModels
 {
     /// <summary>
-    /// This take care of the tray icon and context-menu
+    ///     This take care of the tray icon and context-menu
     /// </summary>
     [Export(typeof(ITrayIconViewModel))]
     public class SystemTrayContextMenuViewModel : TrayIconViewModel
@@ -23,15 +27,14 @@ namespace Frickler.Ui.ViewModels
         private readonly IEnumerable<Lazy<IMenuItem>> _contextMenuItems;
 
         /// <summary>
-        /// Construct the SystemTrayContextMenuViewModel with it's dependencies
+        ///     Construct the SystemTrayContextMenuViewModel with it's dependencies
         /// </summary>
         /// <param name="contextMenuTranslations">IContextMenuTranslations</param>
         /// <param name="contextMenuItems">IEnumerable of IMenuItem</param>
         /// <param name="configViewModel"></param>
         [ImportingConstructor]
         public SystemTrayContextMenuViewModel(IContextMenuTranslations contextMenuTranslations,
-            [ImportMany("systemtray", typeof(IMenuItem))]
-            IEnumerable<Lazy<IMenuItem>> contextMenuItems)
+            [ImportMany("systemtray", typeof(IMenuItem))] IEnumerable<Lazy<IMenuItem>> contextMenuItems)
         {
             _contextMenuTranslations = contextMenuTranslations;
             _contextMenuItems = contextMenuItems;
@@ -81,10 +84,7 @@ namespace Frickler.Ui.ViewModels
                     HorizontalContentAlignment = HorizontalAlignment.Stretch,
                     VerticalContentAlignment = VerticalAlignment.Stretch
                 },
-                ClickAction = clickedItem =>
-                {
-                    Application.Current.Shutdown();
-                }
+                ClickAction = clickedItem => { Application.Current.Shutdown(); }
             };
             exitItem.ApplyIconForegroundColor(Brushes.DarkRed);
             _contextMenuTranslations.CreateDisplayNameBinding(exitItem, nameof(IContextMenuTranslations.Exit));

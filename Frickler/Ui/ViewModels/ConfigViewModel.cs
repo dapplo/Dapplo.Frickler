@@ -1,20 +1,19 @@
-﻿using System;
+﻿#region Usings
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using Caliburn.Micro;
 using Dapplo.CaliburnMicro;
 using Dapplo.CaliburnMicro.Configuration;
 using Dapplo.CaliburnMicro.Extensions;
 using Dapplo.CaliburnMicro.Menu;
-using Dapplo.CaliburnMicro.Security;
 using Dapplo.CaliburnMicro.Translations;
 using Dapplo.Log;
 using Frickler.Configuration;
 using MahApps.Metro.IconPacks;
+
+#endregion
 
 namespace Frickler.Ui.ViewModels
 {
@@ -28,7 +27,7 @@ namespace Frickler.Ui.ViewModels
         private static readonly LogSource Log = new LogSource();
 
         /// <summary>
-        /// Constructor which takes care of exporting the ConfigMenuItem
+        ///     Constructor which takes care of exporting the ConfigMenuItem
         /// </summary>
         [ImportingConstructor]
         public ConfigViewModel([ImportMany] IEnumerable<Lazy<IConfigScreen>> configScreens,
@@ -64,17 +63,17 @@ namespace Frickler.Ui.ViewModels
         }
 
         /// <summary>
-        /// The core translations for the view (ok / cancel)
+        ///     The core translations for the view (ok / cancel)
         /// </summary>
         public ICoreTranslations CoreTranslations { get; private set; }
 
         /// <summary>
-        /// The translations for the config view
+        ///     The translations for the config view
         /// </summary>
         public IConfigTranslations ConfigTranslations { get; set; }
 
         /// <summary>
-        /// The CallINGTranslations (configuration)
+        ///     The CallINGTranslations (configuration)
         /// </summary>
         public IFricklerTranslations FricklerTranslations { get; set; }
 
@@ -89,5 +88,4 @@ namespace Frickler.Ui.ViewModels
             FricklerTranslations.CreateDisplayNameBinding(this, nameof(IFricklerTranslations.Configuration));
         }
     }
-
 }
