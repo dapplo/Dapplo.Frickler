@@ -23,28 +23,19 @@
 #region Usings
 
 using System.ComponentModel;
-using Dapplo.Language;
+using Dapplo.Ini;
+using Dapplo.Log.LogFile;
 
 #endregion
 
 namespace Frickler.Configuration
 {
     /// <summary>
-    ///     The translations for the context menu
+    ///     Store all log specific settings, currently only FileLogger settings are here
     /// </summary>
-    [Language("ContextMenu")]
-    public interface IContextMenuTranslations : ILanguage, INotifyPropertyChanged
+    [IniSection("Log")]
+    [Description("Log configuration")]
+    public interface ILogConfiguration : IFileLoggerConfiguration, IIniSection<ILogConfiguration>
     {
-        /// <summary>
-        ///     The translation of the exit entry in the context menu
-        /// </summary>
-        [DefaultValue("Exit")]
-        string Exit { get; }
-
-        /// <summary>
-        ///     The translation of the title of the context menu
-        /// </summary>
-        [DefaultValue("Frickler")]
-        string Title { get; }
     }
 }

@@ -22,29 +22,38 @@
 
 #region Usings
 
-using System.ComponentModel;
-using Dapplo.Language;
+using System.ComponentModel.Composition;
+using Dapplo.Addons;
+using Dapplo.Log;
+using Dapplo.Log.LogFile;
+using Frickler.Configuration;
 
 #endregion
 
-namespace Frickler.Configuration
+namespace Frickler.Modules
 {
     /// <summary>
-    ///     The translations for the context menu
+    ///     Initialize the logging
     /// </summary>
-    [Language("ContextMenu")]
-    public interface IContextMenuTranslations : ILanguage, INotifyPropertyChanged
+    [StartupAction(StartupOrder = int.MinValue + 100)]
+    public class LoggerStartup : IStartupAction
     {
-        /// <summary>
-        ///     The translation of the exit entry in the context menu
-        /// </summary>
-        [DefaultValue("Exit")]
-        string Exit { get; }
+        [Import]
+        private ILogConfiguration LogConfiguration { get; set; }
 
         /// <summary>
-        ///     The translation of the title of the context menu
+        ///     Initialize the logging
         /// </summary>
-        [DefaultValue("Frickler")]
-        string Title { get; }
+        public void Start()
+        {
+            LogConfiguration.Preformat = true;
+            LogConfiguration.WriteInterval = 100;
+
+            // TODO: Decide on the log level, make available in the UI?
+            LogConfiguration.LogLevel = LogLevels.Debug;
+#if !DEBUG
+            LogSettings.RegisterDefaultLogger<FileLogger>(LogConfiguration);
+#endif
+        }
     }
 }

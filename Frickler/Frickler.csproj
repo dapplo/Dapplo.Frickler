@@ -39,6 +39,9 @@
     <DocumentationFile>bin\Release\Frickler.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BasicFormatsForCore, Version=2.6.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FiddlerCore2.1.0.0\lib\net40\BasicFormatsForCore.dll</HintPath>
@@ -71,29 +74,29 @@
     <Reference Include="Dapplo.Addons.Bootstrapper, Version=0.5.38.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapplo.Addons.Bootstrapper.0.5.38\lib\net45\Dapplo.Addons.Bootstrapper.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.CaliburnMicro, Version=0.5.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.CaliburnMicro.0.5.14\lib\net45\Dapplo.CaliburnMicro.dll</HintPath>
+    <Reference Include="Dapplo.CaliburnMicro, Version=0.5.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.CaliburnMicro.0.5.15\lib\net45\Dapplo.CaliburnMicro.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.CaliburnMicro.Configuration, Version=0.5.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.CaliburnMicro.Configuration.0.5.14\lib\net45\Dapplo.CaliburnMicro.Configuration.dll</HintPath>
+    <Reference Include="Dapplo.CaliburnMicro.Configuration, Version=0.5.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.CaliburnMicro.Configuration.0.5.15\lib\net45\Dapplo.CaliburnMicro.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.CaliburnMicro.Dapp, Version=0.5.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.CaliburnMicro.Dapp.0.5.14\lib\net45\Dapplo.CaliburnMicro.Dapp.dll</HintPath>
+    <Reference Include="Dapplo.CaliburnMicro.Dapp, Version=0.5.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.CaliburnMicro.Dapp.0.5.15\lib\net45\Dapplo.CaliburnMicro.Dapp.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.CaliburnMicro.Menu, Version=0.5.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.CaliburnMicro.Menu.0.5.14\lib\net45\Dapplo.CaliburnMicro.Menu.dll</HintPath>
+    <Reference Include="Dapplo.CaliburnMicro.Menu, Version=0.5.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.CaliburnMicro.Menu.0.5.15\lib\net45\Dapplo.CaliburnMicro.Menu.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.CaliburnMicro.Metro, Version=0.5.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.CaliburnMicro.Metro.0.5.14\lib\net45\Dapplo.CaliburnMicro.Metro.dll</HintPath>
+    <Reference Include="Dapplo.CaliburnMicro.Metro, Version=0.5.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.CaliburnMicro.Metro.0.5.15\lib\net45\Dapplo.CaliburnMicro.Metro.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.CaliburnMicro.NotifyIconWpf, Version=0.5.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.CaliburnMicro.NotifyIconWpf.0.5.14\lib\net45\Dapplo.CaliburnMicro.NotifyIconWpf.dll</HintPath>
+    <Reference Include="Dapplo.CaliburnMicro.NotifyIconWpf, Version=0.5.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.CaliburnMicro.NotifyIconWpf.0.5.15\lib\net45\Dapplo.CaliburnMicro.NotifyIconWpf.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.CaliburnMicro.Security, Version=0.5.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.CaliburnMicro.Security.0.5.14\lib\net45\Dapplo.CaliburnMicro.Security.dll</HintPath>
+    <Reference Include="Dapplo.CaliburnMicro.Security, Version=0.5.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.CaliburnMicro.Security.0.5.15\lib\net45\Dapplo.CaliburnMicro.Security.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.CaliburnMicro.Translations, Version=0.5.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.CaliburnMicro.Translations.0.5.14\lib\net45\Dapplo.CaliburnMicro.Translations.dll</HintPath>
+    <Reference Include="Dapplo.CaliburnMicro.Translations, Version=0.5.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.CaliburnMicro.Translations.0.5.15\lib\net45\Dapplo.CaliburnMicro.Translations.dll</HintPath>
     </Reference>
     <Reference Include="Dapplo.Ini, Version=0.5.19.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapplo.Ini.0.5.19\lib\net45\Dapplo.Ini.dll</HintPath>
@@ -106,6 +109,9 @@
     </Reference>
     <Reference Include="Dapplo.Log, Version=1.0.29.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapplo.Log.1.0.29\lib\net45\Dapplo.Log.dll</HintPath>
+    </Reference>
+    <Reference Include="Dapplo.Log.LogFile, Version=1.0.29.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.Log.LogFile.1.0.29\lib\net45\Dapplo.Log.LogFile.dll</HintPath>
     </Reference>
     <Reference Include="Dapplo.Log.Loggers, Version=1.0.29.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapplo.Log.Loggers.1.0.29\lib\net45\Dapplo.Log.Loggers.dll</HintPath>
@@ -188,7 +194,9 @@
   <ItemGroup>
     <Compile Include="Configuration\IContextMenuTranslations.cs" />
     <Compile Include="Configuration\IFricklerTranslations.cs" />
+    <Compile Include="Configuration\ILogConfiguration.cs" />
     <Compile Include="Modules\IFiddlerModule.cs" />
+    <Compile Include="Modules\LoggerStartup.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Modules\FiddlerModule.cs" />
     <Compile Include="Ui\ViewModels\ConfigViewModel.cs" />
@@ -217,6 +225,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
