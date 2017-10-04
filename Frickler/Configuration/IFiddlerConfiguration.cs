@@ -28,7 +28,7 @@ using Dapplo.InterfaceImpl.Extensions;
 
 #endregion
 
-namespace Frickler.Configuration
+namespace Dapplo.Frickler.Configuration
 {
     /// <summary>
     ///     This defines the configuration needed for Fiddler

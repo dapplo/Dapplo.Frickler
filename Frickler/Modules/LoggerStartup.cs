@@ -24,13 +24,15 @@
 
 using System.ComponentModel.Composition;
 using Dapplo.Addons;
+using Dapplo.Frickler.Configuration;
 using Dapplo.Log;
+#if !DEBUG
 using Dapplo.Log.LogFile;
-using Frickler.Configuration;
+#endif
 
 #endregion
 
-namespace Frickler.Modules
+namespace Dapplo.Frickler.Modules
 {
     /// <summary>
     ///     Initialize the logging

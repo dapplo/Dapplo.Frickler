@@ -32,12 +32,12 @@ using Dapplo.CaliburnMicro.Extensions;
 using Dapplo.CaliburnMicro.Menu;
 using Dapplo.CaliburnMicro.NotifyIconWpf;
 using Dapplo.CaliburnMicro.NotifyIconWpf.ViewModels;
-using Frickler.Configuration;
+using Dapplo.Frickler.Configuration;
 using MahApps.Metro.IconPacks;
 
 #endregion
 
-namespace Frickler.Ui.ViewModels
+namespace Dapplo.Frickler.Ui.ViewModels
 {
     /// <summary>
     ///     This take care of the tray icon and context-menu

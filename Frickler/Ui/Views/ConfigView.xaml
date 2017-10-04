@@ -1,4 +1,4 @@
-﻿<mahapps:MetroWindow x:Class="Frickler.Ui.Views.ConfigView"
+﻿<mahapps:MetroWindow x:Class="Dapplo.Frickler.Ui.Views.ConfigView"
                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:cal="http://www.caliburnproject.org"

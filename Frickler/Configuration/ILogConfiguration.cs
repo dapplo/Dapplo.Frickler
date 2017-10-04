@@ -28,7 +28,7 @@ using Dapplo.Log.LogFile;
 
 #endregion
 
-namespace Frickler.Configuration
+namespace Dapplo.Frickler.Configuration
 {
     /// <summary>
     ///     Store all log specific settings, currently only FileLogger settings are here

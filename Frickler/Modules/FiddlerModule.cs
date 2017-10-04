@@ -26,13 +26,13 @@ using System;
 using System.ComponentModel.Composition;
 using System.Reactive.Disposables;
 using Dapplo.Addons;
+using Dapplo.Frickler.Configuration;
 using Dapplo.Log;
 using Fiddler;
-using Frickler.Configuration;
 
 #endregion
 
-namespace Frickler.Modules
+namespace Dapplo.Frickler.Modules
 {
     /// <summary>
     ///     The actual fiddler code

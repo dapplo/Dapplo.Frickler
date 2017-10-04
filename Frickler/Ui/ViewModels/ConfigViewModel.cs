@@ -31,13 +31,13 @@ using Dapplo.CaliburnMicro.Configuration;
 using Dapplo.CaliburnMicro.Extensions;
 using Dapplo.CaliburnMicro.Menu;
 using Dapplo.CaliburnMicro.Translations;
+using Dapplo.Frickler.Configuration;
 using Dapplo.Log;
-using Frickler.Configuration;
 using MahApps.Metro.IconPacks;
 
 #endregion
 
-namespace Frickler.Ui.ViewModels
+namespace Dapplo.Frickler.Ui.ViewModels
 {
     /// <summary>
     ///     The settings view model is, well... for the settings :)

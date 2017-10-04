@@ -27,10 +27,15 @@ using System.Globalization;
 using System.Threading;
 using System.Windows;
 using Dapplo.CaliburnMicro.Dapp;
+using Dapplo.Log;
+using Dapplo.Log.Loggers;
+#if DEBUG
+
+#endif
 
 #endregion
 
-namespace Frickler
+namespace Dapplo.Frickler
 {
     /// <summary>
     ///     This takes care or starting the Application

@@ -25,12 +25,12 @@
 using System.ComponentModel.Composition;
 using Dapplo.CaliburnMicro.Configuration;
 using Dapplo.CaliburnMicro.Extensions;
-using Frickler.Configuration;
-using Frickler.Modules;
+using Dapplo.Frickler.Configuration;
+using Dapplo.Frickler.Modules;
 
 #endregion
 
-namespace Frickler.Ui.ViewModels
+namespace Dapplo.Frickler.Ui.ViewModels
 {
     /// <summary>
     ///     The fiddler config ViewModel

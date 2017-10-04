@@ -26,7 +26,7 @@ using Dapplo.Addons;
 
 #endregion
 
-namespace Frickler.Modules
+namespace Dapplo.Frickler.Modules
 {
     /// <summary>
     ///     The interface for the Fiddler module

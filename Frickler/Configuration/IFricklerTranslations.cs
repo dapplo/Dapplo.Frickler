@@ -28,7 +28,7 @@ using Dapplo.Language;
 
 #endregion
 
-namespace Frickler.Configuration
+namespace Dapplo.Frickler.Configuration
 {
     /// <summary>
     ///     The translations for Frickler
