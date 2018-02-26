@@ -27,10 +27,9 @@ using System.Globalization;
 using System.Threading;
 using System.Windows;
 using Dapplo.CaliburnMicro.Dapp;
+#if DEBUG
 using Dapplo.Log;
 using Dapplo.Log.Loggers;
-#if DEBUG
-
 #endif
 
 #endregion

@@ -108,24 +108,75 @@ namespace Dapplo.Frickler.Modules
         /// <returns>IDisposable which returns the environment variables back to the original value when disposed</returns>
         private IDisposable ModifyProxyEnvironment()
         {
-            var httpsProxyFromEnvironmentVariable = Environment.GetEnvironmentVariable(HttpsProxyVariable, EnvironmentVariableTarget.Machine);
-            var httpProxyFromEnvironmentVariable = Environment.GetEnvironmentVariable(HttpProxyVariable, EnvironmentVariableTarget.Machine);
-
+            // These are the new values
             var httpProxy = $"http://localhost:{_fiddlerConfiguration.ProxyPort}/";
             var httpsProxy = $"http://localhost:{_fiddlerConfiguration.ProxyPort}/";
-            SetProxyEnvironmentVariables(httpProxy, httpsProxy);
-            return Disposable.Create(() => SetProxyEnvironmentVariables(httpsProxyFromEnvironmentVariable, httpProxyFromEnvironmentVariable));
+
+            // Get the current HTTP_PROXY value
+            var httpProxyFromEnvironmentVariable = Environment.GetEnvironmentVariable(HttpProxyVariable, EnvironmentVariableTarget.Machine);
+            if (string.IsNullOrEmpty(httpProxyFromEnvironmentVariable))
+            {
+                httpProxyFromEnvironmentVariable = Environment.GetEnvironmentVariable(HttpProxyVariable, EnvironmentVariableTarget.User);
+            }
+            var httpTarget = SetEnvironmentVariables(HttpProxyVariable, httpProxy);
+
+            // Get the current HTTP_PROXY value
+            var httpsProxyFromEnvironmentVariable = Environment.GetEnvironmentVariable(HttpsProxyVariable, EnvironmentVariableTarget.Machine);
+            if (string.IsNullOrEmpty(httpsProxyFromEnvironmentVariable))
+            {
+                httpsProxyFromEnvironmentVariable = Environment.GetEnvironmentVariable(HttpsProxyVariable, EnvironmentVariableTarget.User);
+            }
+            var httpsTarget = SetEnvironmentVariables(HttpsProxyVariable, httpsProxy);
+
+            return Disposable.Create(() =>
+            {
+                SetEnvironmentVariables(HttpsProxyVariable, httpsProxyFromEnvironmentVariable, httpsTarget);
+                SetEnvironmentVariables(HttpProxyVariable, httpProxyFromEnvironmentVariable, httpTarget);
+            });
         }
 
         /// <summary>
-        ///     Apply the HTTP_PROXY and HTTPS_PROXY environment variables
+        ///     Apply the environment variables, try machine and than user
         /// </summary>
-        /// <param name="httpProxy">The url to the HTTP proxy</param>
-        /// <param name="httpsProxy">The url to the HTTPS proxy</param>
-        private void SetProxyEnvironmentVariables(string httpProxy, string httpsProxy)
+        /// <param name="variable">string with the variable name</param>
+        /// <param name="value">string with the value</param>
+        /// <param name="target">EnvironmentVariableTarget where to set the variable</param>
+        /// <returns>EnvironmentVariableTarget where the value was set</returns>
+        private EnvironmentVariableTarget SetEnvironmentVariables(string variable, string value, EnvironmentVariableTarget target = EnvironmentVariableTarget.Machine)
         {
-            Environment.SetEnvironmentVariable(HttpProxyVariable, httpProxy, EnvironmentVariableTarget.Machine);
-            Environment.SetEnvironmentVariable(HttpsProxyVariable, httpsProxy, EnvironmentVariableTarget.Machine);
+            if (variable == null)
+            {
+                throw new ArgumentNullException(nameof(variable));
+            }
+
+            if (target == EnvironmentVariableTarget.Machine)
+            {
+                try
+                {
+                    Environment.SetEnvironmentVariable(variable, value, target);
+                    return target;
+                }
+                catch (Exception ex)
+                {
+                    Log.Warn().WriteLine(ex, "Not able to set the variable {0} for {1}", variable, target);
+                    target = EnvironmentVariableTarget.User;
+                }
+            }
+            if (target == EnvironmentVariableTarget.User)
+            {
+                try
+                {
+                    Environment.SetEnvironmentVariable(variable, value, target);
+                    return target;
+                }
+                catch (Exception ex)
+                {
+                    Log.Warn().WriteLine(ex, "Not able to set the variable {0} for {1}", variable, target);
+                    target = EnvironmentVariableTarget.Process;
+                }
+            }
+            Environment.SetEnvironmentVariable(variable, value, target);
+            return target;
         }
 
         /// <summary>

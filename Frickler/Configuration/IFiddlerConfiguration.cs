@@ -24,6 +24,7 @@
 
 using System.ComponentModel;
 using Dapplo.Ini;
+using Dapplo.Ini.Converters;
 using Dapplo.InterfaceImpl.Extensions;
 
 #endregion
@@ -65,5 +66,17 @@ namespace Dapplo.Frickler.Configuration
         /// </summary>
         [DefaultValue(true)]
         bool IsSystemProxy { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [TypeConverter(typeof(StringEncryptionTypeConverter))]
+        string ProxyUser { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [TypeConverter(typeof(StringEncryptionTypeConverter))]
+        string ProxyPassword { get; set; }
     }
 }
