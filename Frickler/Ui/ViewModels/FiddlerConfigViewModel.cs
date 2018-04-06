@@ -44,7 +44,7 @@ namespace Dapplo.Frickler.Ui.ViewModels
         ///     construct the ViewModel
         /// </summary>
         /// <param name="fiddlerConfiguration">IFiddlerConfiguration</param>
-        /// <param name="fiddlerModule">IFiddlerModule</param>
+        /// <param name="fiddlerModule">IFiddlerModule used to stop/start</param>
         /// <param name="fricklerTranslations">IFricklerTranslations</param>
         [ImportingConstructor]
         public FiddlerConfigViewModel(IFiddlerConfiguration fiddlerConfiguration, IFiddlerModule fiddlerModule, IFricklerTranslations fricklerTranslations)

@@ -27,6 +27,7 @@ using System.Globalization;
 using System.Threading;
 using System.Windows;
 using Dapplo.CaliburnMicro.Dapp;
+using Dapplo.Ini.Converters;
 #if DEBUG
 using Dapplo.Log;
 using Dapplo.Log.Loggers;
@@ -47,7 +48,12 @@ namespace Dapplo.Frickler
         [STAThread]
         public static void Main()
         {
-#if DEBUG // Initialize a debug logger for Dapplo packages
+            // TODO: Set via build
+            StringEncryptionTypeConverter.RgbIv = "dlgjowejgogkklwj";
+            StringEncryptionTypeConverter.RgbKey = "lsjvkwhvwujkagfauguwcsjgu2wueuff";
+
+#if DEBUG
+            // Initialize a debug logger for Dapplo packages
             LogSettings.RegisterDefaultLogger<DebugLogger>(LogLevels.Debug);
 #endif
 
@@ -62,7 +68,7 @@ namespace Dapplo.Frickler
             };
 
             // Load the Application.Demo.* assemblies
-            application.Bootstrapper.FindAndLoadAssemblies("Application.Demo.*");
+            application.Bootstrapper.FindAndLoadAssemblies("Dapplo.*");
             application.Run();
         }
     }
