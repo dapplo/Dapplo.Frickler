@@ -25,15 +25,20 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Dapplo.CaliburnMicro;
 using Dapplo.CaliburnMicro.Toasts;
 using Dapplo.Frickler.Ui.ViewModels;
 using Dapplo.Log;
+using Dapplo.Utils;
 using Dapplo.Windows.Advapi32;
 using Microsoft.Win32;
 
 namespace Dapplo.Frickler.Modules
 {
+    /// <summary>
+    /// This takes care of monitoring the registry for changes in the network/internet settings which the proxy needs to know of
+    /// </summary>
     [UiStartupAction, UiShutdownAction]
     public class RegistryMonitorModule : IUiStartupAction, IUiShutdownAction
     {
@@ -81,24 +86,29 @@ namespace Dapplo.Frickler.Modules
 
         private void MonitorNetworkChanges()
         {
+            var localMachineMonitor = RegistryMonitor.ObserveChanges(RegistryHive.LocalMachine, InternetSettingsKey).ObserveOn(_uiSynchronizationContext);
+            var currentUserMonitor = RegistryMonitor.ObserveChanges(RegistryHive.CurrentUser, InternetSettingsKey).ObserveOn(_uiSynchronizationContext);
+
             _disposables = new CompositeDisposable
             {
-
-                RegistryMonitor.ObserveChanges(RegistryHive.LocalMachine, InternetSettingsKey).ObserveOn(_uiSynchronizationContext).SubscribeOn(_uiSynchronizationContext).Subscribe(ProcessNetworkSettingsChange),
-                RegistryMonitor.ObserveChanges(RegistryHive.CurrentUser, InternetSettingsKey).ObserveOn(_uiSynchronizationContext).SubscribeOn(_uiSynchronizationContext).Subscribe(ProcessNetworkSettingsChange)
+                localMachineMonitor.Merge(currentUserMonitor).Throttle(TimeSpan.FromSeconds(5)).Subscribe(ProcessNetworkSettingsChange)
             };
         }
 
         private void ProcessNetworkSettingsChange(Unit unit)
         {
             _disposables?.Dispose();
+            UiContext.RunOn(async () =>
+            {
+                Log.Info().WriteLine("Network settings have been changed, restarting the fiddlerModule.");
+                _toastConductor.ActivateItem(_networkSettingsChangedToastViewModel);
 
-            Log.Info().WriteLine("Network settings have been changed, restarting the fiddlerModule.");
-            _fiddlerModule.Shutdown();
-            _fiddlerModule.Start();
-            _toastConductor.ActivateItem(_networkSettingsChangedToastViewModel);
-            MonitorNetworkChanges();
+                _fiddlerModule.Shutdown();
+                await Task.Delay(500).ConfigureAwait(true);
+                _fiddlerModule.Start();
+                await Task.Delay(500).ConfigureAwait(true);
+                MonitorNetworkChanges();
+            });
         }
-
     }
 }
