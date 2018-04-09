@@ -103,10 +103,17 @@ namespace Dapplo.Frickler.Modules
                 Log.Info().WriteLine("Network settings have been changed, restarting the fiddlerModule.");
                 _toastConductor.ActivateItem(_networkSettingsChangedToastViewModel);
 
-                _fiddlerModule.Shutdown();
-                await Task.Delay(500).ConfigureAwait(true);
-                _fiddlerModule.Start();
-                await Task.Delay(500).ConfigureAwait(true);
+                try
+                {
+                    _fiddlerModule.Shutdown();
+                    await Task.Delay(500).ConfigureAwait(true);
+                    _fiddlerModule.Start();
+                    await Task.Delay(500).ConfigureAwait(true);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error().WriteLine(ex, "Problem restarting the proxy:");
+                }
                 MonitorNetworkChanges();
             });
         }
