@@ -21,9 +21,11 @@
 
 using System;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapplo.CaliburnMicro;
@@ -84,10 +86,56 @@ namespace Dapplo.Frickler.Modules
             _disposables?.Dispose();
         }
 
+        /// <summary>
+        /// Create a string for the internet settings, which can be used to compare for changes
+        /// </summary>
+        /// <param name="hive">RegistryHive</param>
+        /// <returns>string</returns>
+        private string SerializeInternetSettings(RegistryHive hive)
+        {
+            var serializedValue = new StringBuilder();
+            serializedValue.AppendFormat(@"{0}\{1}", hive,InternetSettingsKey).AppendLine();
+            using (var baseKey = RegistryKey.OpenBaseKey(hive, RegistryView.Default))
+            using (var internetSettingsRegistryKey = baseKey.OpenSubKey(InternetSettingsKey))
+            {
+                foreach(var valueName in internetSettingsRegistryKey.GetValueNames().OrderBy(s => s))
+                {
+                    object value;
+                    switch (internetSettingsRegistryKey.GetValueKind(valueName))
+                    {
+                        case RegistryValueKind.DWord:
+                        case RegistryValueKind.QWord:
+                            value = string.Format("0x{0:X8}", internetSettingsRegistryKey.GetValue(valueName));
+                            break;
+                        case RegistryValueKind.Binary:
+                            var binaryValue = internetSettingsRegistryKey.GetValue(valueName) as byte[];
+                            value = string.Join(" ", binaryValue.Select(b => b.ToString("X2")));
+                            break;
+                        default:
+                            value = internetSettingsRegistryKey.GetValue(valueName);
+                            break;
+                    }
+
+                    serializedValue.AppendFormat("{0} = {1}", valueName, value).AppendLine();
+                }
+            }
+
+            return serializedValue.ToString();
+        }
+
+        /// <summary>
+        /// This makes sure the internet settings are monitored for changes
+        /// </summary>
         private void MonitorNetworkChanges()
         {
-            var localMachineMonitor = RegistryMonitor.ObserveChanges(RegistryHive.LocalMachine, InternetSettingsKey).ObserveOn(_uiSynchronizationContext);
-            var currentUserMonitor = RegistryMonitor.ObserveChanges(RegistryHive.CurrentUser, InternetSettingsKey).ObserveOn(_uiSynchronizationContext);
+            var localMachineSettings = SerializeInternetSettings(RegistryHive.LocalMachine);
+            Log.Info().WriteLine("Current LocalMachine settings:");
+            Log.Info().WriteLine(localMachineSettings);
+            var currentUserSettings = SerializeInternetSettings(RegistryHive.CurrentUser);
+            Log.Info().WriteLine("Current CurrentUser settings:");
+            Log.Info().WriteLine(currentUserSettings);
+            var localMachineMonitor = RegistryMonitor.ObserveChanges(RegistryHive.LocalMachine, InternetSettingsKey).ObserveOn(_uiSynchronizationContext).Select(unit => SerializeInternetSettings(RegistryHive.LocalMachine)).Where(settings => !localMachineSettings.Equals(settings));
+            var currentUserMonitor = RegistryMonitor.ObserveChanges(RegistryHive.CurrentUser, InternetSettingsKey).ObserveOn(_uiSynchronizationContext).Select(unit => SerializeInternetSettings(RegistryHive.CurrentUser)).Where(settings => !currentUserSettings.Equals(settings));
 
             _disposables = new CompositeDisposable
             {
@@ -95,20 +143,21 @@ namespace Dapplo.Frickler.Modules
             };
         }
 
-        private void ProcessNetworkSettingsChange(Unit unit)
+        private void ProcessNetworkSettingsChange(string settings)
         {
+            // Make sure while restarting, other changes don't disturb the restart
             _disposables?.Dispose();
             UiContext.RunOn(async () =>
             {
-                Log.Info().WriteLine("Network settings have been changed, restarting the fiddlerModule.");
+                Log.Info().WriteLine("Network settings for have been changed, restarting the fiddlerModule. New settings:\r\n", settings);
                 _toastConductor.ActivateItem(_networkSettingsChangedToastViewModel);
 
                 try
                 {
                     _fiddlerModule.Shutdown();
-                    await Task.Delay(500).ConfigureAwait(true);
+                    await Task.Delay(1000).ConfigureAwait(true);
                     _fiddlerModule.Start();
-                    await Task.Delay(500).ConfigureAwait(true);
+                    await Task.Delay(1000).ConfigureAwait(true);
                 }
                 catch (Exception ex)
                 {
