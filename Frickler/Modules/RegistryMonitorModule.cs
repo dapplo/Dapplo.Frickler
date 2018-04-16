@@ -100,6 +100,11 @@ namespace Dapplo.Frickler.Modules
             {
                 foreach(var valueName in internetSettingsRegistryKey.GetValueNames().OrderBy(s => s))
                 {
+                    // Ignore some values
+                    if (valueName == "AutoDetect")
+                    {
+                        continue;;
+                    }
                     object value;
                     switch (internetSettingsRegistryKey.GetValueKind(valueName))
                     {

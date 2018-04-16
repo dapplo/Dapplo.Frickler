@@ -18,7 +18,6 @@
 // 
 // You should have a copy of the GNU Lesser General Public License
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
-// 
 
 #region Usings
 
@@ -26,7 +25,9 @@ using System;
 using System.Globalization;
 using System.Threading;
 using System.Windows;
+using Caliburn.Micro;
 using Dapplo.CaliburnMicro.Dapp;
+using Dapplo.Frickler.Ui.ViewModels;
 using Dapplo.Ini.Converters;
 #if DEBUG
 using Dapplo.Log;
@@ -67,9 +68,46 @@ namespace Dapplo.Frickler
                 ShutdownMode = ShutdownMode.OnExplicitShutdown
             };
 
+            // Prevent multiple instances
+            if (application.WasAlreadyRunning)
+            {
+                // Don't start the dapplication, exit with 0
+                application.Shutdown(0);
+                return;
+            }
+
+            RegisterErrorHandlers(application);
             // Load the Application.Demo.* assemblies
             application.Bootstrapper.FindAndLoadAssemblies("Dapplo.*");
             application.Run();
+        }
+
+        /// <summary>
+        /// Make sure all exception handlers are hooked
+        /// </summary>
+        /// <param name="application">Dapplication</param>
+        private static void RegisterErrorHandlers(Dapplication application)
+        {
+            application.OnUnhandledAppDomainException += (exception, b) => DisplayErrorViewModel(exception);
+            application.OnUnhandledDispatcherException += DisplayErrorViewModel;
+            application.OnUnhandledTaskException += DisplayErrorViewModel;
+        }
+
+        /// <summary>
+        /// Show the exception
+        /// </summary>
+        /// <param name="exception">Exception</param>
+        private static void DisplayErrorViewModel(Exception exception)
+        {
+            var windowManager = Dapplication.Current.Bootstrapper.GetExport<IWindowManager>().Value;
+            var errorViewModel = Dapplication.Current.Bootstrapper.GetExport<ErrorViewModel>().Value;
+            if (windowManager == null || errorViewModel == null)
+            {
+                return;
+            }
+
+            errorViewModel.SetExceptionToDisplay(exception);
+            windowManager.ShowWindow(errorViewModel);
         }
     }
 }
