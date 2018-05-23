@@ -50,6 +50,16 @@ namespace Dapplo.Frickler
                 .SingleInstance();
 
             builder
+                .RegisterType<ConfigStartup>()
+                .As<IService>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<LoggerStartup>()
+                .As<IService>()
+                .SingleInstance();
+
+            builder
                 .RegisterType<RegistryMonitorModule>()
                 .As<IUiStartup>()
                 .As<IUiShutdown>()
