@@ -18,48 +18,44 @@
 // 
 // You should have a copy of the GNU Lesser General Public License
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
-// 
 
-#region Usings
-
-using Dapplo.Addons;
+using Caliburn.Micro;
+using Dapplo.CaliburnMicro.Extensions;
+using Dapplo.CaliburnMicro.Menu;
 using Dapplo.Frickler.Configuration;
-using Dapplo.Log;
-#if !DEBUG
-using Dapplo.Log.LogFile;
-#endif
+using Dapplo.Frickler.Ui.ViewModels;
+using MahApps.Metro.IconPacks;
 
-#endregion
-
-namespace Dapplo.Frickler.Modules
+namespace Dapplo.Frickler.Ui
 {
     /// <summary>
-    ///     Initialize the logging
+    /// Defines the systemtray config menu item
     /// </summary>
-    [ServiceOrder( int.MinValue + 100)]
-    public class LoggerStartup : IStartup
+    [Menu("systemtray")]
+    public sealed class ConfigMenuItem : ClickableMenuItem
     {
-        private readonly ILogConfiguration _logConfiguration;
-
         /// <inheritdoc />
-        public LoggerStartup(ILogConfiguration logConfiguration)
+        public ConfigMenuItem(
+            IFricklerTranslations fricklerTranslations,
+            IWindowManager windowManager,
+            ConfigViewModel configViewModel)
         {
-            _logConfiguration = logConfiguration;
-        }
+            Style = MenuItemStyles.Default;
+            Id = "B_Config";
+            Icon = new PackIconMaterial
+            {
+                Kind = PackIconMaterialKind.Settings
+            };
+            ClickAction = item =>
+            {
+                if (configViewModel.IsActive)
+                {
+                    return;
+                }
 
-        /// <summary>
-        ///     Initialize the logging
-        /// </summary>
-        public void Start()
-        {
-            _logConfiguration.Preformat = true;
-            _logConfiguration.WriteInterval = 100;
-
-            // TODO: Decide on the log level, make available in the UI?
-            _logConfiguration.LogLevel = LogLevels.Debug;
-#if !DEBUG
-            LogSettings.RegisterDefaultLogger<FileLogger>(_logConfiguration);
-#endif
+                windowManager.ShowDialog(configViewModel);
+            };
+            fricklerTranslations.CreateDisplayNameBinding(this, nameof(IFricklerTranslations.Configuration));
         }
     }
 }

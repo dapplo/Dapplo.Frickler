@@ -24,10 +24,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using Autofac.Features.AttributeFilters;
 using Dapplo.CaliburnMicro.Extensions;
 using Dapplo.CaliburnMicro.Menu;
 using Dapplo.CaliburnMicro.NotifyIconWpf;
@@ -42,7 +42,6 @@ namespace Dapplo.Frickler.Ui.ViewModels
     /// <summary>
     ///     This take care of the tray icon and context-menu
     /// </summary>
-    [Export(typeof(ITrayIconViewModel))]
     public class SystemTrayContextMenuViewModel : TrayIconViewModel
     {
         private readonly IEnumerable<Lazy<IMenuItem>> _contextMenuItems;
@@ -52,10 +51,12 @@ namespace Dapplo.Frickler.Ui.ViewModels
         ///     Construct the SystemTrayContextMenuViewModel with it's dependencies
         /// </summary>
         /// <param name="contextMenuTranslations">IContextMenuTranslations</param>
+        /// <param name="trayIconManager">ITrayIconManager</param>
         /// <param name="contextMenuItems">IEnumerable of IMenuItem</param>
-        [ImportingConstructor]
-        public SystemTrayContextMenuViewModel(IContextMenuTranslations contextMenuTranslations,
-            [ImportMany("systemtray", typeof(IMenuItem))] IEnumerable<Lazy<IMenuItem>> contextMenuItems)
+        public SystemTrayContextMenuViewModel(
+            IContextMenuTranslations contextMenuTranslations,
+            ITrayIconManager trayIconManager,
+            [MetadataFilter("Menu","systemtray")] IEnumerable<Lazy<IMenuItem>> contextMenuItems) : base(trayIconManager)
         {
             _contextMenuTranslations = contextMenuTranslations;
             _contextMenuItems = contextMenuItems;

@@ -31,7 +31,7 @@ namespace Dapplo.Frickler.Modules
     /// <summary>
     ///     The interface for the Fiddler module
     /// </summary>
-    public interface IFiddlerModule : IStartupAction, IShutdownAction
+    public interface IFiddlerModule : IStartup, IShutdown
     {
     }
 }

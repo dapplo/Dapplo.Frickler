@@ -22,7 +22,6 @@
 
 #region Usings
 
-using System.ComponentModel.Composition;
 using Dapplo.CaliburnMicro.Configuration;
 using Dapplo.CaliburnMicro.Extensions;
 using Dapplo.Frickler.Configuration;
@@ -35,7 +34,6 @@ namespace Dapplo.Frickler.Ui.ViewModels
     /// <summary>
     ///     The fiddler config ViewModel
     /// </summary>
-    [Export(typeof(IConfigScreen))]
     public sealed class FiddlerConfigViewModel : SimpleConfigScreen
     {
         private readonly IFiddlerModule _fiddlerModule;
@@ -46,8 +44,10 @@ namespace Dapplo.Frickler.Ui.ViewModels
         /// <param name="fiddlerConfiguration">IFiddlerConfiguration</param>
         /// <param name="fiddlerModule">IFiddlerModule used to stop/start</param>
         /// <param name="fricklerTranslations">IFricklerTranslations</param>
-        [ImportingConstructor]
-        public FiddlerConfigViewModel(IFiddlerConfiguration fiddlerConfiguration, IFiddlerModule fiddlerModule, IFricklerTranslations fricklerTranslations)
+        public FiddlerConfigViewModel(
+            IFiddlerConfiguration fiddlerConfiguration,
+            IFiddlerModule fiddlerModule,
+            IFricklerTranslations fricklerTranslations)
         {
             _fiddlerModule = fiddlerModule;
             Id = "C_Fiddler";

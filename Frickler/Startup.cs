@@ -25,6 +25,7 @@ using System;
 using System.Globalization;
 using System.Threading;
 using System.Windows;
+using Autofac;
 using Caliburn.Micro;
 using Dapplo.CaliburnMicro.Dapp;
 using Dapplo.Frickler.Ui.ViewModels;
@@ -78,7 +79,10 @@ namespace Dapplo.Frickler
 
             RegisterErrorHandlers(application);
             // Load the Application.Demo.* assemblies
-            application.Bootstrapper.FindAndLoadAssemblies("Dapplo.*");
+
+            application.Bootstrapper
+                .FindAndLoadAssemblies("Dapplo.Addons.Config")
+                .FindAndLoadAssemblies("Dapplo.*");
             application.Run();
         }
 
@@ -99,8 +103,8 @@ namespace Dapplo.Frickler
         /// <param name="exception">Exception</param>
         private static void DisplayErrorViewModel(Exception exception)
         {
-            var windowManager = Dapplication.Current.Bootstrapper.GetExport<IWindowManager>().Value;
-            var errorViewModel = Dapplication.Current.Bootstrapper.GetExport<ErrorViewModel>().Value;
+            var windowManager = Dapplication.Current.Bootstrapper.Container.Resolve<IWindowManager>();
+            var errorViewModel = Dapplication.Current.Bootstrapper.Container.Resolve<ErrorViewModel>();
             if (windowManager == null || errorViewModel == null)
             {
                 return;

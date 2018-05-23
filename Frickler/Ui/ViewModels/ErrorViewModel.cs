@@ -20,7 +20,6 @@
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
 using System;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using Caliburn.Micro;
 using Dapplo.CaliburnMicro;
@@ -30,15 +29,11 @@ namespace Dapplo.Frickler.Ui.ViewModels
     /// <summary>
     /// 
     /// </summary>
-    [Export]
     public class ErrorViewModel : Screen
     {
         public IVersionProvider VersionProvider { get; }
 
-        [ImportingConstructor]
-        public ErrorViewModel(
-            [Import(AllowDefault = true)]
-            IVersionProvider versionProvider)
+        public ErrorViewModel(IVersionProvider versionProvider = null)
         {
             VersionProvider = versionProvider;
         }

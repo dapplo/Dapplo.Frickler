@@ -37,9 +37,6 @@ namespace Dapplo.Frickler.Modules
     /// <summary>
     ///     The actual fiddler code
     /// </summary>
-    [Export(typeof(IFiddlerModule))]
-    [StartupAction]
-    [ShutdownAction]
     public class FiddlerModule : IFiddlerModule
     {
         private const string HttpsProxyVariable = "HTTPS_PROXY";
@@ -52,7 +49,6 @@ namespace Dapplo.Frickler.Modules
         ///     Constructor for the module
         /// </summary>
         /// <param name="fiddlerConfiguration"></param>
-        [ImportingConstructor]
         public FiddlerModule(IFiddlerConfiguration fiddlerConfiguration)
         {
             _fiddlerConfiguration = fiddlerConfiguration;

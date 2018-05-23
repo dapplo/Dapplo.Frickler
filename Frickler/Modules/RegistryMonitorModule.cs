@@ -20,14 +20,13 @@
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
 using System;
-using System.ComponentModel.Composition;
 using System.Linq;
-using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Autofac.Features.AttributeFilters;
 using Dapplo.CaliburnMicro;
 using Dapplo.CaliburnMicro.Toasts;
 using Dapplo.Frickler.Ui.ViewModels;
@@ -41,15 +40,14 @@ namespace Dapplo.Frickler.Modules
     /// <summary>
     /// This takes care of monitoring the registry for changes in the network/internet settings which the proxy needs to know of
     /// </summary>
-    [UiStartupAction, UiShutdownAction]
-    public class RegistryMonitorModule : IUiStartupAction, IUiShutdownAction
+    public class RegistryMonitorModule : IUiStartup, IUiShutdown
     {
         private static readonly LogSource Log = new LogSource();
         private const string InternetSettingsKey = @"Software\Microsoft\Windows\CurrentVersion\Internet Settings";
         private readonly ToastConductor _toastConductor;
         private readonly IFiddlerModule _fiddlerModule;
         private readonly SynchronizationContext _uiSynchronizationContext;
-        private readonly NetworkSettingsChangedToastViewModel _networkSettingsChangedToastViewModel;
+        private readonly Func<NetworkSettingsChangedToastViewModel> _networkSettingsChangedToastViewModelFactory;
         private IDisposable _disposables;
 
         /// <summary>
@@ -58,19 +56,17 @@ namespace Dapplo.Frickler.Modules
         /// <param name="toastConductor">ToastConductor used to show toasts</param>
         /// <param name="fiddlerModule">IFiddlerModule used to stop and start the proxy</param>
         /// <param name="uiSynchronizationContext">SynchronizationContext used to show information</param>
-        /// <param name="networkSettingsChangedToastViewModel">NetworkSettingsChangedToastViewModel is the view model to show when changes occured.</param>
-        [ImportingConstructor]
+        /// <param name="networkSettingsChangedToastViewModelFactory">NetworkSettingsChangedToastViewModel is the view model to show when changes occured.</param>
         public RegistryMonitorModule(
             ToastConductor toastConductor,
             IFiddlerModule fiddlerModule,
-            [Import("ui")]
-            SynchronizationContext uiSynchronizationContext,
-            NetworkSettingsChangedToastViewModel networkSettingsChangedToastViewModel)
+            [KeyFilter("ui")]SynchronizationContext uiSynchronizationContext,
+            Func<NetworkSettingsChangedToastViewModel> networkSettingsChangedToastViewModelFactory)
         {
             _toastConductor = toastConductor;
             _fiddlerModule = fiddlerModule;
             _uiSynchronizationContext = uiSynchronizationContext;
-            _networkSettingsChangedToastViewModel = networkSettingsChangedToastViewModel;
+            _networkSettingsChangedToastViewModelFactory = networkSettingsChangedToastViewModelFactory;
         }
 
         /// <inheritdoc />
@@ -98,26 +94,35 @@ namespace Dapplo.Frickler.Modules
             using (var baseKey = RegistryKey.OpenBaseKey(hive, RegistryView.Default))
             using (var internetSettingsRegistryKey = baseKey.OpenSubKey(InternetSettingsKey))
             {
-                foreach(var valueName in internetSettingsRegistryKey.GetValueNames().OrderBy(s => s))
+                if (internetSettingsRegistryKey == null)
+                {
+                    return String.Empty;
+                }
+                foreach(var valueName in internetSettingsRegistryKey.GetValueNames().ToList().OrderBy(s => s))
                 {
                     // Ignore some values
                     if (valueName == "AutoDetect")
                     {
                         continue;;
                     }
-                    object value;
+                    object value = internetSettingsRegistryKey.GetValue(valueName);
+                    if (value == null)
+                    {
+                        continue;
+                    }
+
                     switch (internetSettingsRegistryKey.GetValueKind(valueName))
                     {
                         case RegistryValueKind.DWord:
                         case RegistryValueKind.QWord:
-                            value = string.Format("0x{0:X8}", internetSettingsRegistryKey.GetValue(valueName));
+                            value = string.Format("0x{0:X8}", value);
                             break;
                         case RegistryValueKind.Binary:
-                            var binaryValue = internetSettingsRegistryKey.GetValue(valueName) as byte[];
-                            value = string.Join(" ", binaryValue.Select(b => b.ToString("X2")));
-                            break;
-                        default:
-                            value = internetSettingsRegistryKey.GetValue(valueName);
+                            var binaryValue = value as byte[];
+                            if (binaryValue != null)
+                            {
+                                value = string.Join(" ", binaryValue.Select(b => b.ToString("X2")));
+                            }
                             break;
                     }
 
@@ -144,7 +149,7 @@ namespace Dapplo.Frickler.Modules
 
             _disposables = new CompositeDisposable
             {
-                localMachineMonitor.Merge(currentUserMonitor).Throttle(TimeSpan.FromSeconds(5)).Subscribe(ProcessNetworkSettingsChange)
+                localMachineMonitor.Merge(currentUserMonitor).Throttle(TimeSpan.FromSeconds(10)).Subscribe(ProcessNetworkSettingsChange)
             };
         }
 
@@ -155,7 +160,7 @@ namespace Dapplo.Frickler.Modules
             UiContext.RunOn(async () =>
             {
                 Log.Info().WriteLine("Network settings for have been changed, restarting the fiddlerModule. New settings:\r\n", settings);
-                _toastConductor.ActivateItem(_networkSettingsChangedToastViewModel);
+                _toastConductor.ActivateItem(_networkSettingsChangedToastViewModelFactory());
 
                 try
                 {

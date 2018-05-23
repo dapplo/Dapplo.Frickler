@@ -32,8 +32,8 @@ namespace Dapplo.Frickler.Modules
     /// <summary>
     ///     Initialize the Configuration framework
     /// </summary>
-    [StartupAction(StartupOrder = int.MinValue)]
-    public class ConfigStartup : IStartupAction
+    [ServiceOrder(int.MinValue)]
+    public class ConfigStartup : IStartup
     {
         /// <summary>
         ///     Initialize the Configuration framework
