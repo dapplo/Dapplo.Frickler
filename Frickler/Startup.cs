@@ -27,6 +27,7 @@ using System.Threading;
 using System.Windows;
 using Autofac;
 using Caliburn.Micro;
+using Dapplo.Addons.Bootstrapper;
 using Dapplo.CaliburnMicro.Dapp;
 using Dapplo.Frickler.Ui.ViewModels;
 using Dapplo.Ini.Converters;
@@ -64,7 +65,12 @@ namespace Dapplo.Frickler
             Thread.CurrentThread.CurrentCulture = cultureInfo;
             Thread.CurrentThread.CurrentUICulture = cultureInfo;
 
-            var application = new Dapplication("Frickler", "AD5323E2-7614-46F2-8F80-2F8667970367")
+            var applicationConfig = ApplicationConfig.Create()
+                .WithApplicationName("Frickler")
+                .WithMutex("AD5323E2-7614-46F2-8F80-2F8667970367")
+                .WithAssemblyNames("Dapplo.Addons.Config");
+
+            var application = new Dapplication(applicationConfig)
             {
                 ShutdownMode = ShutdownMode.OnExplicitShutdown
             };
@@ -78,11 +84,7 @@ namespace Dapplo.Frickler
             }
 
             RegisterErrorHandlers(application);
-            // Load the Application.Demo.* assemblies
 
-            application.Bootstrapper
-                .FindAndLoadAssemblies("Dapplo.Addons.Config")
-                .FindAndLoadAssemblies("Dapplo.*");
             application.Run();
         }
 
