@@ -69,6 +69,7 @@ namespace Dapplo.Frickler
             builder
                 .RegisterType<FiddlerModule>()
                 .As<IFiddlerModule>()
+                .As<IService>()
                 .SingleInstance();
 
             builder
@@ -87,7 +88,7 @@ namespace Dapplo.Frickler
                 .AsSelf();
 
             builder
-                .RegisterType<NetworkSettingsChangedToastViewModel>()
+                .RegisterType<InternetSettingsChangedToastViewModel>()
                 .AsSelf();
         }
     }

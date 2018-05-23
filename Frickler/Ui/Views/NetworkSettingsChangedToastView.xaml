@@ -6,7 +6,7 @@
                               xmlns:core="clr-namespace:ToastNotifications.Core;assembly=ToastNotifications"
                               xmlns:viewModels="clr-namespace:Dapplo.Frickler.Ui.ViewModels"
                               mc:Ignorable="d" Width="200" Padding="5" Background="DarkRed"
-                              d:DataContext="{d:DesignInstance viewModels:NetworkSettingsChangedToastViewModel,IsDesignTimeCreatable=True}"
+                              d:DataContext="{d:DesignInstance viewModels:InternetSettingsChangedToastViewModel,IsDesignTimeCreatable=True}"
                               d:DesignHeight="300" d:DesignWidth="300">
 	<StackPanel>
 		<TextBlock Text="{Binding Message}" Foreground="White" TextWrapping="Wrap" />

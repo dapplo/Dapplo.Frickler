@@ -25,14 +25,14 @@ using Dapplo.Frickler.Configuration;
 namespace Dapplo.Frickler.Ui.ViewModels
 {
     /// <summary>
-    /// A toast which informs the user that the network settings have been changed
+    /// A toast which informs the user that the internet settings have been changed
     /// </summary>
-    public class NetworkSettingsChangedToastViewModel : ToastBaseViewModel
+    public class InternetSettingsChangedToastViewModel : ToastBaseViewModel
     {
         private readonly IFricklerTranslations _fricklerTranslations;
 
         /// <inheritdoc />
-        public NetworkSettingsChangedToastViewModel(IFricklerTranslations fricklerTranslations)
+        public InternetSettingsChangedToastViewModel(IFricklerTranslations fricklerTranslations)
         {
             _fricklerTranslations = fricklerTranslations;
         }

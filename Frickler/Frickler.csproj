@@ -245,7 +245,7 @@
     <Compile Include="Ui\ViewModels\ConfigViewModel.cs" />
     <Compile Include="Ui\ViewModels\ErrorViewModel.cs" />
     <Compile Include="Ui\ViewModels\FiddlerConfigViewModel.cs" />
-    <Compile Include="Ui\ViewModels\NetworkSettingsChangedToastViewModel.cs" />
+    <Compile Include="Ui\ViewModels\InternetSettingsChangedToastViewModel.cs" />
     <Compile Include="Ui\ViewModels\SystemTrayContextMenuViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -47,32 +47,32 @@ namespace Dapplo.Frickler.Modules
         private readonly ToastConductor _toastConductor;
         private readonly IFiddlerModule _fiddlerModule;
         private readonly SynchronizationContext _uiSynchronizationContext;
-        private readonly Func<NetworkSettingsChangedToastViewModel> _networkSettingsChangedToastViewModelFactory;
+        private readonly Func<InternetSettingsChangedToastViewModel> _internetSettingsChangedToastViewModelFactory;
         private IDisposable _disposables;
 
         /// <summary>
-        /// 
+        /// Constructor with dependencies
         /// </summary>
         /// <param name="toastConductor">ToastConductor used to show toasts</param>
         /// <param name="fiddlerModule">IFiddlerModule used to stop and start the proxy</param>
         /// <param name="uiSynchronizationContext">SynchronizationContext used to show information</param>
-        /// <param name="networkSettingsChangedToastViewModelFactory">NetworkSettingsChangedToastViewModel is the view model to show when changes occured.</param>
+        /// <param name="internetSettingsChangedToastViewModelFactory">NetworkSettingsChangedToastViewModel is the view model to show when changes occured.</param>
         public RegistryMonitorModule(
             ToastConductor toastConductor,
             IFiddlerModule fiddlerModule,
             [KeyFilter("ui")]SynchronizationContext uiSynchronizationContext,
-            Func<NetworkSettingsChangedToastViewModel> networkSettingsChangedToastViewModelFactory)
+            Func<InternetSettingsChangedToastViewModel> internetSettingsChangedToastViewModelFactory)
         {
             _toastConductor = toastConductor;
             _fiddlerModule = fiddlerModule;
             _uiSynchronizationContext = uiSynchronizationContext;
-            _networkSettingsChangedToastViewModelFactory = networkSettingsChangedToastViewModelFactory;
+            _internetSettingsChangedToastViewModelFactory = internetSettingsChangedToastViewModelFactory;
         }
 
         /// <inheritdoc />
         public void Start()
         {
-            MonitorNetworkChanges();
+            MonitorInternetSettingsChanges();
         }
 
         /// <inheritdoc />
@@ -96,7 +96,7 @@ namespace Dapplo.Frickler.Modules
             {
                 if (internetSettingsRegistryKey == null)
                 {
-                    return String.Empty;
+                    return string.Empty;
                 }
                 foreach(var valueName in internetSettingsRegistryKey.GetValueNames().ToList().OrderBy(s => s))
                 {
@@ -115,11 +115,10 @@ namespace Dapplo.Frickler.Modules
                     {
                         case RegistryValueKind.DWord:
                         case RegistryValueKind.QWord:
-                            value = string.Format("0x{0:X8}", value);
+                            value = $"0x{value:X8}";
                             break;
                         case RegistryValueKind.Binary:
-                            var binaryValue = value as byte[];
-                            if (binaryValue != null)
+                            if (value is byte[] binaryValue)
                             {
                                 value = string.Join(" ", binaryValue.Select(b => b.ToString("X2")));
                             }
@@ -136,7 +135,7 @@ namespace Dapplo.Frickler.Modules
         /// <summary>
         /// This makes sure the internet settings are monitored for changes
         /// </summary>
-        private void MonitorNetworkChanges()
+        private void MonitorInternetSettingsChanges()
         {
             var localMachineSettings = SerializeInternetSettings(RegistryHive.LocalMachine);
             Log.Info().WriteLine("Current LocalMachine settings:");
@@ -149,18 +148,19 @@ namespace Dapplo.Frickler.Modules
 
             _disposables = new CompositeDisposable
             {
-                localMachineMonitor.Merge(currentUserMonitor).Throttle(TimeSpan.FromSeconds(10)).Subscribe(ProcessNetworkSettingsChange)
+                localMachineMonitor.Merge(currentUserMonitor).Throttle(TimeSpan.FromSeconds(10)).Subscribe(ProcessInternetSettingsChange)
             };
+            Log.Debug().WriteLine("Now monitoring changes to the Internet Settings!");
         }
 
-        private void ProcessNetworkSettingsChange(string settings)
+        private void ProcessInternetSettingsChange(string settings)
         {
             // Make sure while restarting, other changes don't disturb the restart
             _disposables?.Dispose();
             UiContext.RunOn(async () =>
             {
                 Log.Info().WriteLine("Network settings for have been changed, restarting the fiddlerModule. New settings:\r\n", settings);
-                _toastConductor.ActivateItem(_networkSettingsChangedToastViewModelFactory());
+                _toastConductor.ActivateItem(_internetSettingsChangedToastViewModelFactory());
 
                 try
                 {
@@ -173,7 +173,7 @@ namespace Dapplo.Frickler.Modules
                 {
                     Log.Error().WriteLine(ex, "Problem restarting the proxy:");
                 }
-                MonitorNetworkChanges();
+                MonitorInternetSettingsChanges();
             });
         }
     }
