@@ -81,44 +81,44 @@
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\ControlzEx.dll</HintPath>
     </Reference>
-    <Reference Include="Costura, Version=2.0.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
-      <HintPath>..\packages\Costura.Fody.2.0.0\lib\net452\Costura.dll</HintPath>
+    <Reference Include="Costura, Version=2.0.1.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Costura.Fody.2.0.1\lib\net452\Costura.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.Addons, Version=1.0.40.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.Addons.1.0.40-beta\lib\net45\Dapplo.Addons.dll</HintPath>
+    <Reference Include="Dapplo.Addons, Version=1.0.44.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.Addons.1.0.44\lib\net45\Dapplo.Addons.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.Addons.Bootstrapper, Version=1.0.40.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.Addons.Bootstrapper.1.0.40-beta\lib\net45\Dapplo.Addons.Bootstrapper.dll</HintPath>
+    <Reference Include="Dapplo.Addons.Bootstrapper, Version=1.0.44.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.Addons.Bootstrapper.1.0.44\lib\net45\Dapplo.Addons.Bootstrapper.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.Addons.Config, Version=1.0.38.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.Addons.Config.1.0.38-beta\lib\net45\Dapplo.Addons.Config.dll</HintPath>
+    <Reference Include="Dapplo.Addons.Config, Version=1.0.44.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.Addons.Config.1.0.44\lib\net45\Dapplo.Addons.Config.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.CaliburnMicro, Version=1.0.41.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.CaliburnMicro.1.0.41-beta\lib\net45\Dapplo.CaliburnMicro.dll</HintPath>
+    <Reference Include="Dapplo.CaliburnMicro, Version=1.0.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.CaliburnMicro.1.0.42\lib\net45\Dapplo.CaliburnMicro.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.CaliburnMicro.Configuration, Version=1.0.41.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.CaliburnMicro.Configuration.1.0.41-beta\lib\net45\Dapplo.CaliburnMicro.Configuration.dll</HintPath>
+    <Reference Include="Dapplo.CaliburnMicro.Configuration, Version=1.0.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.CaliburnMicro.Configuration.1.0.42\lib\net45\Dapplo.CaliburnMicro.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.CaliburnMicro.Dapp, Version=1.0.41.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.CaliburnMicro.Dapp.1.0.41-beta\lib\net45\Dapplo.CaliburnMicro.Dapp.dll</HintPath>
+    <Reference Include="Dapplo.CaliburnMicro.Dapp, Version=1.0.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.CaliburnMicro.Dapp.1.0.42\lib\net45\Dapplo.CaliburnMicro.Dapp.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.CaliburnMicro.Menu, Version=1.0.41.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.CaliburnMicro.Menu.1.0.41-beta\lib\net45\Dapplo.CaliburnMicro.Menu.dll</HintPath>
+    <Reference Include="Dapplo.CaliburnMicro.Menu, Version=1.0.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.CaliburnMicro.Menu.1.0.42\lib\net45\Dapplo.CaliburnMicro.Menu.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.CaliburnMicro.Metro, Version=1.0.41.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.CaliburnMicro.Metro.1.0.41-beta\lib\net45\Dapplo.CaliburnMicro.Metro.dll</HintPath>
+    <Reference Include="Dapplo.CaliburnMicro.Metro, Version=1.0.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.CaliburnMicro.Metro.1.0.42\lib\net45\Dapplo.CaliburnMicro.Metro.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.CaliburnMicro.NotifyIconWpf, Version=1.0.41.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.CaliburnMicro.NotifyIconWpf.1.0.41-beta\lib\net45\Dapplo.CaliburnMicro.NotifyIconWpf.dll</HintPath>
+    <Reference Include="Dapplo.CaliburnMicro.NotifyIconWpf, Version=1.0.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.CaliburnMicro.NotifyIconWpf.1.0.42\lib\net45\Dapplo.CaliburnMicro.NotifyIconWpf.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.CaliburnMicro.Security, Version=1.0.41.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.CaliburnMicro.Security.1.0.41-beta\lib\net45\Dapplo.CaliburnMicro.Security.dll</HintPath>
+    <Reference Include="Dapplo.CaliburnMicro.Security, Version=1.0.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.CaliburnMicro.Security.1.0.42\lib\net45\Dapplo.CaliburnMicro.Security.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.CaliburnMicro.Toasts, Version=1.0.41.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.CaliburnMicro.Toasts.1.0.41-beta\lib\net452\Dapplo.CaliburnMicro.Toasts.dll</HintPath>
+    <Reference Include="Dapplo.CaliburnMicro.Toasts, Version=1.0.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.CaliburnMicro.Toasts.1.0.42\lib\net452\Dapplo.CaliburnMicro.Toasts.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.CaliburnMicro.Translations, Version=1.0.41.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.CaliburnMicro.Translations.1.0.41-beta\lib\net45\Dapplo.CaliburnMicro.Translations.dll</HintPath>
+    <Reference Include="Dapplo.CaliburnMicro.Translations, Version=1.0.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.CaliburnMicro.Translations.1.0.42\lib\net45\Dapplo.CaliburnMicro.Translations.dll</HintPath>
     </Reference>
     <Reference Include="Dapplo.Ini, Version=0.5.28.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapplo.Ini.0.5.28\lib\net45\Dapplo.Ini.dll</HintPath>
@@ -144,8 +144,8 @@
     <Reference Include="Dapplo.Windows, Version=0.5.56.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapplo.Windows.0.5.56\lib\net45\Dapplo.Windows.dll</HintPath>
     </Reference>
-    <Reference Include="Dapplo.Windows.Advapi32, Version=0.5.54.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.Windows.Advapi32.0.5.54\lib\net45\Dapplo.Windows.Advapi32.dll</HintPath>
+    <Reference Include="Dapplo.Windows.Advapi32, Version=0.5.56.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.Windows.Advapi32.0.5.56\lib\net45\Dapplo.Windows.Advapi32.dll</HintPath>
     </Reference>
     <Reference Include="Dapplo.Windows.Common, Version=0.5.56.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapplo.Windows.Common.0.5.56\lib\net45\Dapplo.Windows.Common.dll</HintPath>
@@ -287,9 +287,9 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Costura.Fody.2.0.0\build\Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.2.0.0\build\Costura.Fody.targets'))" />
     <Error Condition="!Exists('..\packages\Fody.3.0.3\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.3.0.3\build\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\Costura.Fody.2.0.1\build\Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.2.0.1\build\Costura.Fody.targets'))" />
   </Target>
-  <Import Project="..\packages\Costura.Fody.2.0.0\build\Costura.Fody.targets" Condition="Exists('..\packages\Costura.Fody.2.0.0\build\Costura.Fody.targets')" />
   <Import Project="..\packages\Fody.3.0.3\build\Fody.targets" Condition="Exists('..\packages\Fody.3.0.3\build\Fody.targets')" />
+  <Import Project="..\packages\Costura.Fody.2.0.1\build\Costura.Fody.targets" Condition="Exists('..\packages\Costura.Fody.2.0.1\build\Costura.Fody.targets')" />
 </Project>
