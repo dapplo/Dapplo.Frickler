@@ -81,7 +81,7 @@ namespace Dapplo.Frickler.Configuration
         /// <summary>
         /// Shown when network settings have been changed
         /// </summary>
-        [DefaultValue("Your network settings have been changed\r\nfrickler restarted it's proxy to accomodate.")]
+        [DefaultValue("Your network settings have been changed, frickler restarted it's proxy to accomodate.")]
         string NetworkSettingsChanged { get; }
     }
 }
