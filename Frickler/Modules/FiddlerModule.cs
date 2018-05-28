@@ -23,9 +23,7 @@
 #region Usings
 
 using System;
-using System.ComponentModel.Composition;
 using System.Reactive.Disposables;
-using Dapplo.Addons;
 using Dapplo.Frickler.Configuration;
 using Dapplo.Log;
 using Fiddler;
@@ -39,9 +37,9 @@ namespace Dapplo.Frickler.Modules
     /// </summary>
     public class FiddlerModule : IFiddlerModule
     {
+        private static readonly LogSource Log = new LogSource();
         private const string HttpsProxyVariable = "HTTPS_PROXY";
         private const string HttpProxyVariable = "HTTP_PROXY";
-        private static readonly LogSource Log = new LogSource();
         private readonly IFiddlerConfiguration _fiddlerConfiguration;
         private IDisposable _proxyDisposable;
 
@@ -57,8 +55,15 @@ namespace Dapplo.Frickler.Modules
         /// <inheritdoc />
         public void Start()
         {
-            if (!_fiddlerConfiguration.IsEnabled || FiddlerApplication.IsStarted())
+            if (!_fiddlerConfiguration.IsEnabled)
             {
+                Log.Info().WriteLine("Fiddler is not enabled.");
+                return;
+            }
+            Log.Info().WriteLine("Starting Fiddler.");
+            if (FiddlerApplication.IsStarted())
+            {
+                Log.Warn().WriteLine("Fiddler already started");
                 return;
             }
             _proxyDisposable?.Dispose();
@@ -67,11 +72,13 @@ namespace Dapplo.Frickler.Modules
                 _proxyDisposable = ModifyProxyEnvironment();
             }
 
-            var startupFlags = FiddlerCoreStartupFlags.ChainToUpstreamGateway | FiddlerCoreStartupFlags.OptimizeThreadPool;
+            var startupFlags =  FiddlerCoreStartupFlags.ChainToUpstreamGateway | FiddlerCoreStartupFlags.OptimizeThreadPool;
             if (_fiddlerConfiguration.IsSystemProxy)
             {
                 startupFlags |= FiddlerCoreStartupFlags.RegisterAsSystemProxy;
             }
+
+            Log.Info().WriteLine("Starting Fiddler proxy, on http://localhost:{0} with {1}", _fiddlerConfiguration.ProxyPort, startupFlags);
             // Call Startup to tell FiddlerCore to begin listening on the specified port,
             // and optionally register as the system proxy and optionally decrypt HTTPS traffic.
             FiddlerApplication.Startup(_fiddlerConfiguration.ProxyPort, startupFlags);
@@ -79,6 +86,7 @@ namespace Dapplo.Frickler.Modules
             // This enables the automatic authentication
             if (_fiddlerConfiguration.AutomaticallyAuthenticate)
             {
+                Log.Info().WriteLine("Enabling automatic authentication.");
                 FiddlerApplication.BeforeRequest += OnBeforeRequest;
             }
             // This makes logging of error possible
@@ -88,13 +96,22 @@ namespace Dapplo.Frickler.Modules
         /// <inheritdoc />
         public void Shutdown()
         {
+            Log.Info().WriteLine("Stopping Fiddler.");
             FiddlerApplication.BeforeRequest -= OnBeforeRequest;
             FiddlerApplication.ResponseHeadersAvailable -= OnResponseHeadersAvailable;
+            _proxyDisposable?.Dispose();
             if (!FiddlerApplication.IsStarted())
+            {
+                Log.Warn().WriteLine("No shutdown, as Fiddler was not started.");
+                return;
+            }
+
+            if (!FiddlerApplication.oProxy.IsAttached)
             {
                 return;
             }
-            _proxyDisposable?.Dispose();
+
+            Log.Info().WriteLine("Detaching proxy.");
             FiddlerApplication.oProxy.Detach();
         }
 
@@ -104,28 +121,36 @@ namespace Dapplo.Frickler.Modules
         /// <returns>IDisposable which returns the environment variables back to the original value when disposed</returns>
         private IDisposable ModifyProxyEnvironment()
         {
+            Log.Info().WriteLine("Setting the proxy environment variables.");
             // These are the new values
             var httpProxy = $"http://localhost:{_fiddlerConfiguration.ProxyPort}/";
             var httpsProxy = $"http://localhost:{_fiddlerConfiguration.ProxyPort}/";
 
             // Get the current HTTP_PROXY value
-            var httpProxyFromEnvironmentVariable = Environment.GetEnvironmentVariable(HttpProxyVariable, EnvironmentVariableTarget.Machine);
+            EnvironmentVariableTarget targetHttpProxyEnvironmentVariable = EnvironmentVariableTarget.User;
+            var httpProxyFromEnvironmentVariable = Environment.GetEnvironmentVariable(HttpProxyVariable, EnvironmentVariableTarget.User);
             if (string.IsNullOrEmpty(httpProxyFromEnvironmentVariable))
             {
-                httpProxyFromEnvironmentVariable = Environment.GetEnvironmentVariable(HttpProxyVariable, EnvironmentVariableTarget.User);
+                targetHttpProxyEnvironmentVariable = EnvironmentVariableTarget.Machine;
+                httpProxyFromEnvironmentVariable = Environment.GetEnvironmentVariable(HttpProxyVariable, EnvironmentVariableTarget.Machine);
             }
-            var httpTarget = SetEnvironmentVariables(HttpProxyVariable, httpProxy);
+            Log.Info().WriteLine("Previous {0} value: {1}", HttpProxyVariable, httpProxyFromEnvironmentVariable);
+            var httpTarget = SetEnvironmentVariables(HttpProxyVariable, httpProxy, targetHttpProxyEnvironmentVariable);
 
-            // Get the current HTTP_PROXY value
-            var httpsProxyFromEnvironmentVariable = Environment.GetEnvironmentVariable(HttpsProxyVariable, EnvironmentVariableTarget.Machine);
+            // Get the current HTTPS_PROXY value
+            EnvironmentVariableTarget targetHttpsProxyEnvironmentVariable = EnvironmentVariableTarget.User;
+            var httpsProxyFromEnvironmentVariable = Environment.GetEnvironmentVariable(HttpsProxyVariable, EnvironmentVariableTarget.User);
             if (string.IsNullOrEmpty(httpsProxyFromEnvironmentVariable))
             {
-                httpsProxyFromEnvironmentVariable = Environment.GetEnvironmentVariable(HttpsProxyVariable, EnvironmentVariableTarget.User);
+                targetHttpsProxyEnvironmentVariable = EnvironmentVariableTarget.Machine;
+                httpsProxyFromEnvironmentVariable = Environment.GetEnvironmentVariable(HttpsProxyVariable, EnvironmentVariableTarget.Machine);
             }
-            var httpsTarget = SetEnvironmentVariables(HttpsProxyVariable, httpsProxy);
+            Log.Info().WriteLine("Previous {0} value: {1}", HttpsProxyVariable, httpsProxyFromEnvironmentVariable);
+            var httpsTarget = SetEnvironmentVariables(HttpsProxyVariable, httpsProxy, targetHttpsProxyEnvironmentVariable);
 
             return Disposable.Create(() =>
             {
+                Log.Info().WriteLine("Restoring the proxy environment variables.");
                 SetEnvironmentVariables(HttpsProxyVariable, httpsProxyFromEnvironmentVariable, httpsTarget);
                 SetEnvironmentVariables(HttpProxyVariable, httpProxyFromEnvironmentVariable, httpTarget);
             });
@@ -150,7 +175,6 @@ namespace Dapplo.Frickler.Modules
                 try
                 {
                     Environment.SetEnvironmentVariable(variable, value, target);
-                    return target;
                 }
                 catch (Exception ex)
                 {
@@ -163,7 +187,6 @@ namespace Dapplo.Frickler.Modules
                 try
                 {
                     Environment.SetEnvironmentVariable(variable, value, target);
-                    return target;
                 }
                 catch (Exception ex)
                 {
@@ -171,7 +194,20 @@ namespace Dapplo.Frickler.Modules
                     target = EnvironmentVariableTarget.Process;
                 }
             }
-            Environment.SetEnvironmentVariable(variable, value, target);
+            if (target == EnvironmentVariableTarget.Process)
+            {
+                try
+                {
+                    Environment.SetEnvironmentVariable(variable, value, target);
+                }
+                catch (Exception ex)
+                {
+                    Log.Warn().WriteLine(ex, "Not able to set the variable {0} for {1}", variable, target);
+                }
+            }
+
+            Log.Info().WriteLine("Set {0} to {1} for {2}", value, value, target);
+
             return target;
         }
 
@@ -181,9 +217,16 @@ namespace Dapplo.Frickler.Modules
         /// <param name="oSession">Session</param>
         private void OnResponseHeadersAvailable(Session oSession)
         {
+            if (oSession?.ResponseHeaders?.HTTPResponseCode == null)
+            {
+                return;
+            }
             if (oSession.ResponseHeaders.HTTPResponseCode < 400)
             {
-                Log.Verbose().WriteLine("{0}|{1}", oSession.ResponseHeaders.HTTPResponseCode, oSession.fullUrl);
+                if (Log.IsVerboseEnabled())
+                {
+                    Log.Verbose().WriteLine("{0}|{1}", oSession.ResponseHeaders.HTTPResponseCode, oSession.fullUrl);
+                }
                 return;
             }
             Log.Error().WriteLine("{0}|{1}", oSession.ResponseHeaders.HTTPResponseCode, oSession.fullUrl);
@@ -195,6 +238,10 @@ namespace Dapplo.Frickler.Modules
         /// <param name="session"></param>
         private void OnBeforeRequest(Session session)
         {
+            if (session == null)
+            {
+                return;
+            }
             if (_fiddlerConfiguration.AutomaticallyAuthenticate)
             {
                 // This enables the automatic authentication
