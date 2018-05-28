@@ -113,6 +113,7 @@ namespace Dapplo.Frickler.Modules
 
             Log.Info().WriteLine("Detaching proxy.");
             FiddlerApplication.oProxy.Detach();
+            FiddlerApplication.Shutdown();
         }
 
         /// <summary>
@@ -206,7 +207,7 @@ namespace Dapplo.Frickler.Modules
                 }
             }
 
-            Log.Info().WriteLine("Set {0} to {1} for {2}", value, value, target);
+            Log.Info().WriteLine("Set {0} to {1} for {2}", variable, value, target);
 
             return target;
         }
