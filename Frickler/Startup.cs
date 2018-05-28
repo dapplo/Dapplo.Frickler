@@ -31,8 +31,8 @@ using Dapplo.Addons.Bootstrapper;
 using Dapplo.CaliburnMicro.Dapp;
 using Dapplo.Frickler.Ui.ViewModels;
 using Dapplo.Ini.Converters;
-#if DEBUG
 using Dapplo.Log;
+#if DEBUG
 using Dapplo.Log.Loggers;
 #endif
 
@@ -45,20 +45,21 @@ namespace Dapplo.Frickler
     /// </summary>
     public static class Startup
     {
+        private static LogSource Log;
         /// <summary>
         ///     Start the application
         /// </summary>
         [STAThread]
-        public static void Main()
+        public static int Main()
         {
-            // TODO: Set via build
-            StringEncryptionTypeConverter.RgbIv = "dlgjowejgogkklwj";
-            StringEncryptionTypeConverter.RgbKey = "lsjvkwhvwujkagfauguwcsjgu2wueuff";
-
 #if DEBUG
             // Initialize a debug logger for Dapplo packages
             LogSettings.RegisterDefaultLogger<DebugLogger>(LogLevels.Debug);
 #endif
+            Log = new LogSource();
+            // TODO: Set via build
+            StringEncryptionTypeConverter.RgbIv = "dlgjowejgogkklwj";
+            StringEncryptionTypeConverter.RgbKey = "lsjvkwhvwujkagfauguwcsjgu2wueuff";
 
             // Use this to setup the culture of your UI
             var cultureInfo = CultureInfo.GetCultureInfo("de-DE");
@@ -78,14 +79,16 @@ namespace Dapplo.Frickler
             // Prevent multiple instances
             if (application.WasAlreadyRunning)
             {
+                Log.Warn().WriteLine("{0} was already running.", applicationConfig.ApplicationName);
                 // Don't start the dapplication, exit with 0
-                application.Shutdown(0);
-                return;
+                application.Shutdown(-1);
+                return -1;
             }
 
             RegisterErrorHandlers(application);
 
             application.Run();
+            return 0;
         }
 
         /// <summary>

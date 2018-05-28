@@ -80,8 +80,7 @@ namespace Dapplo.Frickler
 
             builder
                 .RegisterType<ConfigViewModel>()
-                .AsSelf()
-                .SingleInstance();
+                .AsSelf();
 
             builder
                 .RegisterType<ErrorViewModel>()

@@ -27,12 +27,19 @@ using Dapplo.CaliburnMicro;
 namespace Dapplo.Frickler.Ui.ViewModels
 {
     /// <summary>
-    /// 
+    /// The ViewModel for the errors
     /// </summary>
     public class ErrorViewModel : Screen
     {
+        /// <summary>
+        /// The Version-Provider to show the current and potential next version
+        /// </summary>
         public IVersionProvider VersionProvider { get; }
 
+        /// <summary>
+        /// Constructor for the dependencies
+        /// </summary>
+        /// <param name="versionProvider">IVersionProvider</param>
         public ErrorViewModel(IVersionProvider versionProvider = null)
         {
             VersionProvider = versionProvider;

@@ -48,7 +48,7 @@ namespace Dapplo.Frickler.Modules
         private readonly IFiddlerModule _fiddlerModule;
         private readonly SynchronizationContext _uiSynchronizationContext;
         private readonly Func<InternetSettingsChangedToastViewModel> _internetSettingsChangedToastViewModelFactory;
-        private IDisposable _disposables;
+        private IDisposable _monitorObservable;
 
         /// <summary>
         /// Constructor with dependencies
@@ -79,7 +79,7 @@ namespace Dapplo.Frickler.Modules
         public void Shutdown()
         {
             _toastConductor.TryClose();
-            _disposables?.Dispose();
+            _monitorObservable?.Dispose();
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Dapplo.Frickler.Modules
                     // Ignore some values
                     if (valueName == "AutoDetect")
                     {
-                        continue;;
+                        continue;
                     }
                     object value = internetSettingsRegistryKey.GetValue(valueName);
                     if (value == null)
@@ -146,7 +146,7 @@ namespace Dapplo.Frickler.Modules
             var localMachineMonitor = RegistryMonitor.ObserveChanges(RegistryHive.LocalMachine, InternetSettingsKey).ObserveOn(_uiSynchronizationContext).Select(unit => SerializeInternetSettings(RegistryHive.LocalMachine)).Where(settings => !localMachineSettings.Equals(settings));
             var currentUserMonitor = RegistryMonitor.ObserveChanges(RegistryHive.CurrentUser, InternetSettingsKey).ObserveOn(_uiSynchronizationContext).Select(unit => SerializeInternetSettings(RegistryHive.CurrentUser)).Where(settings => !currentUserSettings.Equals(settings));
 
-            _disposables = new CompositeDisposable
+            _monitorObservable = new CompositeDisposable
             {
                 localMachineMonitor.Merge(currentUserMonitor).Throttle(TimeSpan.FromSeconds(10)).Subscribe(ProcessInternetSettingsChange)
             };
@@ -155,18 +155,18 @@ namespace Dapplo.Frickler.Modules
 
         private void ProcessInternetSettingsChange(string settings)
         {
+            Log.Info().WriteLine("Network settings for have been changed, restarting the fiddlerModule. New settings:\r\n", settings);
             // Make sure while restarting, other changes don't disturb the restart
-            _disposables?.Dispose();
+            _monitorObservable?.Dispose();
             UiContext.RunOn(async () =>
             {
-                Log.Info().WriteLine("Network settings for have been changed, restarting the fiddlerModule. New settings:\r\n", settings);
                 _toastConductor.ActivateItem(_internetSettingsChangedToastViewModelFactory());
 
                 try
                 {
-                    _fiddlerModule.Shutdown();
+                    await Task.Run(() => _fiddlerModule.Shutdown());
                     await Task.Delay(1000).ConfigureAwait(true);
-                    _fiddlerModule.Start();
+                    await Task.Run(() => _fiddlerModule.Start());
                     await Task.Delay(1000).ConfigureAwait(true);
                 }
                 catch (Exception ex)

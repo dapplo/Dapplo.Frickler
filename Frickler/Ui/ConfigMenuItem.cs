@@ -19,6 +19,8 @@
 // You should have a copy of the GNU Lesser General Public License
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
+using System;
+using Autofac.Features.OwnedInstances;
 using Caliburn.Micro;
 using Dapplo.CaliburnMicro.Extensions;
 using Dapplo.CaliburnMicro.Menu;
@@ -38,7 +40,7 @@ namespace Dapplo.Frickler.Ui
         public ConfigMenuItem(
             IFricklerTranslations fricklerTranslations,
             IWindowManager windowManager,
-            ConfigViewModel configViewModel)
+            Func<Owned<ConfigViewModel>> configViewModelFactory)
         {
             Style = MenuItemStyles.Default;
             Id = "B_Config";
@@ -48,12 +50,13 @@ namespace Dapplo.Frickler.Ui
             };
             ClickAction = item =>
             {
-                if (configViewModel.IsActive)
+                IsEnabled = false;
+                using (var ownedConfigViewModel = configViewModelFactory())
                 {
-                    return;
+                    windowManager.ShowDialog(ownedConfigViewModel.Value);
                 }
 
-                windowManager.ShowDialog(configViewModel);
+                IsEnabled = true;
             };
             fricklerTranslations.CreateDisplayNameBinding(this, nameof(IFricklerTranslations.Configuration));
         }
