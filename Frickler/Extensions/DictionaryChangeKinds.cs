@@ -19,31 +19,24 @@
 // You should have a copy of the GNU Lesser General Public License
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
-using System.Collections.Generic;
-using Dapplo.CaliburnMicro.Toasts.ViewModels;
-using Dapplo.Frickler.Configuration;
-using Dapplo.Frickler.Extensions;
-
-namespace Dapplo.Frickler.Ui.ViewModels
+namespace Dapplo.Frickler.Extensions
 {
     /// <summary>
-    /// A toast which informs the user that the internet settings have been changed
+    /// Describes what kind of change was made
     /// </summary>
-    public class InternetSettingsChangedToastViewModel : ToastBaseViewModel
+    public enum DictionaryChangeKinds
     {
-        private readonly IFricklerTranslations _fricklerTranslations;
-
-        /// <inheritdoc />
-        public InternetSettingsChangedToastViewModel(IFricklerTranslations fricklerTranslations, IEnumerable<DictionaryChangeInfo<string, string>> changes)
-        {
-            _fricklerTranslations = fricklerTranslations;
-            Message = string.Format(_fricklerTranslations.NetworkSettingsChanged, string.Join("\r\n", changes));
-        }
-
         /// <summary>
-        /// This contains the message for the ViewModel
+        /// Key and value added
         /// </summary>
-        public string Message { get; }
-
+        Added,
+        /// <summary>
+        /// Key and value removed
+        /// </summary>
+        Removed,
+        /// <summary>
+        /// Value changed
+        /// </summary>
+        Changed
     }
 }

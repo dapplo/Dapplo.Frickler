@@ -20,15 +20,16 @@
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac.Features.AttributeFilters;
 using Dapplo.CaliburnMicro;
 using Dapplo.CaliburnMicro.Toasts;
+using Dapplo.Frickler.Extensions;
 using Dapplo.Frickler.Ui.ViewModels;
 using Dapplo.Log;
 using Dapplo.Utils;
@@ -47,7 +48,7 @@ namespace Dapplo.Frickler.Modules
         private readonly ToastConductor _toastConductor;
         private readonly IFiddlerModule _fiddlerModule;
         private readonly SynchronizationContext _uiSynchronizationContext;
-        private readonly Func<InternetSettingsChangedToastViewModel> _internetSettingsChangedToastViewModelFactory;
+        private readonly Func<IEnumerable<DictionaryChangeInfo<string, string>>, InternetSettingsChangedToastViewModel> _internetSettingsChangedToastViewModelFactory;
         private IDisposable _monitorObservable;
 
         /// <summary>
@@ -61,7 +62,7 @@ namespace Dapplo.Frickler.Modules
             ToastConductor toastConductor,
             IFiddlerModule fiddlerModule,
             [KeyFilter("ui")]SynchronizationContext uiSynchronizationContext,
-            Func<InternetSettingsChangedToastViewModel> internetSettingsChangedToastViewModelFactory)
+            Func<IEnumerable<DictionaryChangeInfo<string, string>>, InternetSettingsChangedToastViewModel> internetSettingsChangedToastViewModelFactory)
         {
             _toastConductor = toastConductor;
             _fiddlerModule = fiddlerModule;
@@ -87,16 +88,15 @@ namespace Dapplo.Frickler.Modules
         /// </summary>
         /// <param name="hive">RegistryHive</param>
         /// <returns>string</returns>
-        private string SerializeInternetSettings(RegistryHive hive)
+        private IDictionary<string, string> SerializeInternetSettings(RegistryHive hive)
         {
-            var serializedValue = new StringBuilder();
-            serializedValue.AppendFormat(@"{0}\{1}", hive,InternetSettingsKey).AppendLine();
+            var serializedValue = new SortedDictionary<string, string>();
             using (var baseKey = RegistryKey.OpenBaseKey(hive, RegistryView.Default))
             using (var internetSettingsRegistryKey = baseKey.OpenSubKey(InternetSettingsKey))
             {
                 if (internetSettingsRegistryKey == null)
                 {
-                    return string.Empty;
+                    return serializedValue;
                 }
                 foreach(var valueName in internetSettingsRegistryKey.GetValueNames().ToList().OrderBy(s => s))
                 {
@@ -110,26 +110,27 @@ namespace Dapplo.Frickler.Modules
                     {
                         continue;
                     }
+                    string stringValue = value as string ?? value.ToString();
 
                     switch (internetSettingsRegistryKey.GetValueKind(valueName))
                     {
                         case RegistryValueKind.DWord:
                         case RegistryValueKind.QWord:
-                            value = $"0x{value:X8}";
+                            stringValue = $"0x{value:X8}";
                             break;
                         case RegistryValueKind.Binary:
                             if (value is byte[] binaryValue)
                             {
-                                value = string.Join(" ", binaryValue.Select(b => b.ToString("X2")));
+                                stringValue = string.Join(" ", binaryValue.Select(b => b.ToString("X2")));
                             }
                             break;
                     }
 
-                    serializedValue.AppendFormat("{0} = {1}", valueName, value).AppendLine();
+                    serializedValue[valueName] = stringValue;
                 }
             }
 
-            return serializedValue.ToString();
+            return serializedValue;
         }
 
         /// <summary>
@@ -137,30 +138,32 @@ namespace Dapplo.Frickler.Modules
         /// </summary>
         private void MonitorInternetSettingsChanges()
         {
-            var localMachineSettings = SerializeInternetSettings(RegistryHive.LocalMachine);
+            var currentLocalMachineSettings = SerializeInternetSettings(RegistryHive.LocalMachine);
             Log.Info().WriteLine("Current LocalMachine settings:");
-            Log.Info().WriteLine(localMachineSettings);
+            Log.Info().WriteLine(string.Join("\r\n", currentLocalMachineSettings.Select(kv => $"{kv.Key} = {kv.Value}")));
             var currentUserSettings = SerializeInternetSettings(RegistryHive.CurrentUser);
             Log.Info().WriteLine("Current CurrentUser settings:");
-            Log.Info().WriteLine(currentUserSettings);
-            var localMachineMonitor = RegistryMonitor.ObserveChanges(RegistryHive.LocalMachine, InternetSettingsKey).ObserveOn(_uiSynchronizationContext).Select(unit => SerializeInternetSettings(RegistryHive.LocalMachine)).Where(settings => !localMachineSettings.Equals(settings));
-            var currentUserMonitor = RegistryMonitor.ObserveChanges(RegistryHive.CurrentUser, InternetSettingsKey).ObserveOn(_uiSynchronizationContext).Select(unit => SerializeInternetSettings(RegistryHive.CurrentUser)).Where(settings => !currentUserSettings.Equals(settings));
+            Log.Info().WriteLine(string.Join("\r\n", currentUserSettings.Select(kv => $"{kv.Key} = {kv.Value}")));
+            var localMachineMonitor = RegistryMonitor.ObserveChanges(RegistryHive.LocalMachine, InternetSettingsKey).ObserveOn(_uiSynchronizationContext).Select(unit => (currentLocalMachineSettings, SerializeInternetSettings(RegistryHive.LocalMachine))).Where(settings => settings.currentLocalMachineSettings.DetectChanges(settings.Item2).Any());
+            var currentUserMonitor = RegistryMonitor.ObserveChanges(RegistryHive.CurrentUser, InternetSettingsKey).ObserveOn(_uiSynchronizationContext).Select(unit => (currentUserSettings, SerializeInternetSettings(RegistryHive.CurrentUser))).Where(settings => settings.currentUserSettings.DetectChanges(settings.Item2).Any());
 
             _monitorObservable = new CompositeDisposable
             {
-                localMachineMonitor.Merge(currentUserMonitor).Throttle(TimeSpan.FromSeconds(10)).Subscribe(ProcessInternetSettingsChange)
+                localMachineMonitor.Merge(currentUserMonitor).Throttle(TimeSpan.FromSeconds(10)).Subscribe(s => ProcessInternetSettingsChange(s.Item1, s.Item2))
             };
             Log.Debug().WriteLine("Now monitoring changes to the Internet Settings!");
         }
 
-        private void ProcessInternetSettingsChange(string settings)
+        private void ProcessInternetSettingsChange(IDictionary<string, string> before, IDictionary<string, string> after)
         {
-            Log.Info().WriteLine("Network settings for have been changed, restarting the fiddlerModule. New settings:\r\n", settings);
+            Log.Info().WriteLine("Network settings for have been changed, restarting the fiddlerModule. Modifications:\r\n");
+            var changes = before.DetectChanges(after).ToList();
+            Log.Info().WriteLine(string.Join("\r\n", changes));
             // Make sure while restarting, other changes don't disturb the restart
             _monitorObservable?.Dispose();
             UiContext.RunOn(async () =>
             {
-                _toastConductor.ActivateItem(_internetSettingsChangedToastViewModelFactory());
+                _toastConductor.ActivateItem(_internetSettingsChangedToastViewModelFactory(changes));
 
                 try
                 {

@@ -231,6 +231,9 @@
     <Compile Include="Configuration\IContextMenuTranslations.cs" />
     <Compile Include="Configuration\IFricklerTranslations.cs" />
     <Compile Include="Configuration\ILogConfiguration.cs" />
+    <Compile Include="Extensions\DictionaryChangeInfo.cs" />
+    <Compile Include="Extensions\DictionaryChangeKinds.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="FlickerAddonModule.cs" />
     <Compile Include="Modules\IFiddlerModule.cs" />
     <Compile Include="Modules\ConfigStartup.cs" />
