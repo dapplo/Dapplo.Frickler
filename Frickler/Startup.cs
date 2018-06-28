@@ -66,10 +66,13 @@ namespace Dapplo.Frickler
             Thread.CurrentThread.CurrentCulture = cultureInfo;
             Thread.CurrentThread.CurrentUICulture = cultureInfo;
 
-            var applicationConfig = ApplicationConfig.Create()
+            var applicationConfig = ApplicationConfigBuilder
+                .Create()
                 .WithApplicationName("Frickler")
                 .WithMutex("AD5323E2-7614-46F2-8F80-2F8667970367")
-                .WithAssemblyNames("Dapplo.Addons.Config");
+                .WithConfigSupport()
+                .WithCaliburnMicro()
+                .BuildApplicationConfig();
 
             var application = new Dapplication(applicationConfig)
             {
