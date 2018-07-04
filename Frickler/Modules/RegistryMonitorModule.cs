@@ -42,7 +42,7 @@ namespace Dapplo.Frickler.Modules
     /// <summary>
     /// This takes care of monitoring the registry for changes in the network/internet settings which the proxy needs to know of
     /// </summary>
-    [Service(nameof(RegistryMonitorModule), nameof(CaliburnStartOrder.CaliburnMicroBootstrapper), TaskSchedulerName = "ui")]
+    [Service(nameof(RegistryMonitorModule), nameof(CaliburnServices.CaliburnMicroBootstrapper), TaskSchedulerName = "ui")]
     public class RegistryMonitorModule : IStartup, IShutdown
     {
         private static readonly LogSource Log = new LogSource();
