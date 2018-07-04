@@ -49,6 +49,7 @@ namespace Dapplo.Frickler.Extensions
         /// </summary>
         public TValue After { get; set; }
 
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             return Equals(obj as DictionaryChangeInfo<TKey, TValue>);

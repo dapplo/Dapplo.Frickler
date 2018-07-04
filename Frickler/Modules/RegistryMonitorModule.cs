@@ -27,6 +27,7 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac.Features.AttributeFilters;
+using Dapplo.Addons;
 using Dapplo.CaliburnMicro;
 using Dapplo.CaliburnMicro.Toasts;
 using Dapplo.Frickler.Extensions;
@@ -41,7 +42,8 @@ namespace Dapplo.Frickler.Modules
     /// <summary>
     /// This takes care of monitoring the registry for changes in the network/internet settings which the proxy needs to know of
     /// </summary>
-    public class RegistryMonitorModule : IUiStartup, IUiShutdown
+    [Service(nameof(RegistryMonitorModule), nameof(CaliburnStartOrder.CaliburnMicroBootstrapper), TaskSchedulerName = "ui")]
+    public class RegistryMonitorModule : IStartup, IShutdown
     {
         private static readonly LogSource Log = new LogSource();
         private const string InternetSettingsKey = @"Software\Microsoft\Windows\CurrentVersion\Internet Settings";
@@ -71,7 +73,7 @@ namespace Dapplo.Frickler.Modules
         }
 
         /// <inheritdoc />
-        public void Start()
+        public void Startup()
         {
             MonitorInternetSettingsChanges();
         }
@@ -169,7 +171,7 @@ namespace Dapplo.Frickler.Modules
                 {
                     await Task.Run(() => _fiddlerModule.Shutdown());
                     await Task.Delay(1000).ConfigureAwait(true);
-                    await Task.Run(() => _fiddlerModule.Start());
+                    await Task.Run(() => _fiddlerModule.Startup());
                     await Task.Delay(1000).ConfigureAwait(true);
                 }
                 catch (Exception ex)

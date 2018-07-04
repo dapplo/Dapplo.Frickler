@@ -61,8 +61,7 @@ namespace Dapplo.Frickler
 
             builder
                 .RegisterType<RegistryMonitorModule>()
-                .As<IUiStartup>()
-                .As<IUiShutdown>()
+                .As<IService>()
                 .WithAttributeFiltering()
                 .SingleInstance();
 

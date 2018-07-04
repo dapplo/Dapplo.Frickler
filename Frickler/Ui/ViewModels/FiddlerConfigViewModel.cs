@@ -71,7 +71,7 @@ namespace Dapplo.Frickler.Ui.ViewModels
         {
             _fiddlerModule.Shutdown();
             base.Commit();
-            _fiddlerModule.Start();
+            _fiddlerModule.Startup();
         }
     }
 }

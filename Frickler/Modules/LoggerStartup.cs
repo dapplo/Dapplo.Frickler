@@ -36,7 +36,7 @@ namespace Dapplo.Frickler.Modules
     /// <summary>
     ///     Initialize the logging
     /// </summary>
-    [ServiceOrder( int.MinValue + 100)]
+    [Service(nameof(LoggerStartup))]
     public class LoggerStartup : IStartup
     {
         private readonly ILogConfiguration _logConfiguration;
@@ -50,7 +50,7 @@ namespace Dapplo.Frickler.Modules
         /// <summary>
         ///     Initialize the logging
         /// </summary>
-        public void Start()
+        public void Startup()
         {
             _logConfiguration.Preformat = true;
             _logConfiguration.WriteInterval = 100;
