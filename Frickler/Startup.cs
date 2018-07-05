@@ -28,6 +28,7 @@ using System.Windows;
 using Autofac;
 using Caliburn.Micro;
 using Dapplo.Addons.Bootstrapper;
+using Dapplo.Addons.Config;
 using Dapplo.CaliburnMicro.Dapp;
 using Dapplo.Frickler.Ui.ViewModels;
 using Dapplo.Ini.Converters;
@@ -70,7 +71,10 @@ namespace Dapplo.Frickler
                 .Create()
                 .WithApplicationName("Frickler")
                 .WithMutex("AD5323E2-7614-46F2-8F80-2F8667970367")
+                .WithoutCopyOfEmbeddedAssemblies()
                 .WithConfigSupport()
+                .WithIniSectionResolving()
+                .WithLanguageResolving()
                 .WithCaliburnMicro()
                 .BuildApplicationConfig();
 

@@ -28,7 +28,6 @@ using Dapplo.CaliburnMicro.Configuration;
 using Dapplo.CaliburnMicro.Extensions;
 using Dapplo.CaliburnMicro.Translations;
 using Dapplo.Frickler.Configuration;
-using Dapplo.Log;
 
 #endregion
 
@@ -40,8 +39,6 @@ namespace Dapplo.Frickler.Ui.ViewModels
     /// </summary>
     public sealed class ConfigViewModel : Config<IConfigScreen>, IMaintainPosition
     {
-        private static readonly LogSource Log = new LogSource();
-
         /// <summary>
         ///     Constructor which takes care of exporting the ConfigMenuItem
         /// </summary>

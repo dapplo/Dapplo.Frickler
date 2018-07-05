@@ -22,7 +22,6 @@
 using Autofac;
 using Autofac.Features.AttributeFilters;
 using Dapplo.Addons;
-using Dapplo.CaliburnMicro;
 using Dapplo.CaliburnMicro.Configuration;
 using Dapplo.CaliburnMicro.Menu;
 using Dapplo.CaliburnMicro.NotifyIconWpf;

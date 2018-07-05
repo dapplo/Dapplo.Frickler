@@ -28,7 +28,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac.Features.AttributeFilters;
 using Dapplo.Addons;
-using Dapplo.CaliburnMicro;
 using Dapplo.CaliburnMicro.Toasts;
 using Dapplo.Frickler.Extensions;
 using Dapplo.Frickler.Ui.ViewModels;
@@ -36,13 +35,15 @@ using Dapplo.Log;
 using Dapplo.Utils;
 using Dapplo.Windows.Advapi32;
 using Microsoft.Win32;
+using Polly;
+using Polly.Retry;
 
 namespace Dapplo.Frickler.Modules
 {
     /// <summary>
     /// This takes care of monitoring the registry for changes in the network/internet settings which the proxy needs to know of
     /// </summary>
-    [Service(nameof(RegistryMonitorModule), nameof(CaliburnServices.CaliburnMicroBootstrapper), TaskSchedulerName = "ui")]
+    [Service(nameof(RegistryMonitorModule), nameof(FiddlerModule), TaskSchedulerName = "ui")]
     public class RegistryMonitorModule : IStartup, IShutdown
     {
         private static readonly LogSource Log = new LogSource();
@@ -52,6 +53,7 @@ namespace Dapplo.Frickler.Modules
         private readonly SynchronizationContext _uiSynchronizationContext;
         private readonly Func<IEnumerable<DictionaryChangeInfo<string, string>>, InternetSettingsChangedToastViewModel> _internetSettingsChangedToastViewModelFactory;
         private IDisposable _monitorObservable;
+        private readonly RetryPolicy _retryPolicy = Policy.Handle<Exception>().WaitAndRetry(3, retryCount => TimeSpan.FromMilliseconds(300));
 
         /// <summary>
         /// Constructor with dependencies
@@ -146,8 +148,8 @@ namespace Dapplo.Frickler.Modules
             var currentUserSettings = SerializeInternetSettings(RegistryHive.CurrentUser);
             Log.Info().WriteLine("Current CurrentUser settings:");
             Log.Info().WriteLine(string.Join("\r\n", currentUserSettings.Select(kv => $"{kv.Key} = {kv.Value}")));
-            var localMachineMonitor = RegistryMonitor.ObserveChanges(RegistryHive.LocalMachine, InternetSettingsKey).ObserveOn(_uiSynchronizationContext).Select(unit => (currentLocalMachineSettings, SerializeInternetSettings(RegistryHive.LocalMachine))).Where(settings => settings.currentLocalMachineSettings.DetectChanges(settings.Item2).Any());
-            var currentUserMonitor = RegistryMonitor.ObserveChanges(RegistryHive.CurrentUser, InternetSettingsKey).ObserveOn(_uiSynchronizationContext).Select(unit => (currentUserSettings, SerializeInternetSettings(RegistryHive.CurrentUser))).Where(settings => settings.currentUserSettings.DetectChanges(settings.Item2).Any());
+            var localMachineMonitor = RegistryMonitor.ObserveChanges(RegistryHive.LocalMachine, InternetSettingsKey).ObserveOn(_uiSynchronizationContext).Select(unit => (currentLocalMachineSettings, _retryPolicy.Execute(() => SerializeInternetSettings(RegistryHive.LocalMachine)))).Where(settings => settings.currentLocalMachineSettings.DetectChanges(settings.Item2).Any());
+            var currentUserMonitor = RegistryMonitor.ObserveChanges(RegistryHive.CurrentUser, InternetSettingsKey).ObserveOn(_uiSynchronizationContext).Select(unit => (currentUserSettings, _retryPolicy.Execute(() => SerializeInternetSettings(RegistryHive.CurrentUser)))).Where(settings => settings.currentUserSettings.DetectChanges(settings.Item2).Any());
 
             _monitorObservable = new CompositeDisposable
             {
@@ -163,21 +165,24 @@ namespace Dapplo.Frickler.Modules
             Log.Info().WriteLine(string.Join("\r\n", changes));
             // Make sure while restarting, other changes don't disturb the restart
             _monitorObservable?.Dispose();
-            UiContext.RunOn(async () =>
+            UiContext.RunOn(() =>
             {
                 _toastConductor.ActivateItem(_internetSettingsChangedToastViewModelFactory(changes));
-
+            });
+            Task.Run(async () =>
+            {
                 try
                 {
-                    await Task.Run(() => _fiddlerModule.Shutdown());
+                    await Task.Run(() => _fiddlerModule.Shutdown()).ConfigureAwait(true);
                     await Task.Delay(1000).ConfigureAwait(true);
-                    await Task.Run(() => _fiddlerModule.Startup());
+                    await Task.Run(() => _fiddlerModule.Startup()).ConfigureAwait(true);
                     await Task.Delay(1000).ConfigureAwait(true);
                 }
                 catch (Exception ex)
                 {
                     Log.Error().WriteLine(ex, "Problem restarting the proxy:");
                 }
+
                 MonitorInternetSettingsChanges();
             });
         }

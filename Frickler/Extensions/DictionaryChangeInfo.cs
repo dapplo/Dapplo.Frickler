@@ -20,7 +20,6 @@
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Dapplo.Frickler.Extensions

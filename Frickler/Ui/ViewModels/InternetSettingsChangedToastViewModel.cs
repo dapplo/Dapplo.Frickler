@@ -31,13 +31,10 @@ namespace Dapplo.Frickler.Ui.ViewModels
     /// </summary>
     public class InternetSettingsChangedToastViewModel : ToastBaseViewModel
     {
-        private readonly IFricklerTranslations _fricklerTranslations;
-
         /// <inheritdoc />
         public InternetSettingsChangedToastViewModel(IFricklerTranslations fricklerTranslations, IEnumerable<DictionaryChangeInfo<string, string>> changes)
         {
-            _fricklerTranslations = fricklerTranslations;
-            Message = string.Format(_fricklerTranslations.NetworkSettingsChanged, string.Join("\r\n", changes));
+            Message = string.Format(fricklerTranslations.NetworkSettingsChanged, string.Join("\r\n", changes));
         }
 
         /// <summary>

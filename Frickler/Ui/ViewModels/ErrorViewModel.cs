@@ -20,7 +20,6 @@
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
 using System;
-using System.Diagnostics;
 using Caliburn.Micro;
 using Dapplo.CaliburnMicro;
 
@@ -55,7 +54,7 @@ namespace Dapplo.Frickler.Ui.ViewModels
         /// </summary>
         public void SetExceptionToDisplay(Exception exception)
         {
-            Stacktrace = exception.ToStringDemystified();
+            Stacktrace = exception.ToString();//ToStringDemystified();
             Message = exception.Message;
         }
 
