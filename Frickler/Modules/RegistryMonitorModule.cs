@@ -53,7 +53,7 @@ namespace Dapplo.Frickler.Modules
         private readonly SynchronizationContext _uiSynchronizationContext;
         private readonly Func<IEnumerable<DictionaryChangeInfo<string, string>>, InternetSettingsChangedToastViewModel> _internetSettingsChangedToastViewModelFactory;
         private IDisposable _monitorObservable;
-        private readonly RetryPolicy _retryPolicy = Policy.Handle<Exception>().WaitAndRetry(3, retryCount => TimeSpan.FromMilliseconds(300));
+        private static readonly RetryPolicy RetryPolicy = Policy.Handle<Exception>().WaitAndRetry(3, retryCount => TimeSpan.FromMilliseconds(retryCount * 200));
 
         /// <summary>
         /// Constructor with dependencies
@@ -148,8 +148,8 @@ namespace Dapplo.Frickler.Modules
             var currentUserSettings = SerializeInternetSettings(RegistryHive.CurrentUser);
             Log.Info().WriteLine("Current CurrentUser settings:");
             Log.Info().WriteLine(string.Join("\r\n", currentUserSettings.Select(kv => $"{kv.Key} = {kv.Value}")));
-            var localMachineMonitor = RegistryMonitor.ObserveChanges(RegistryHive.LocalMachine, InternetSettingsKey).ObserveOn(_uiSynchronizationContext).Select(unit => (currentLocalMachineSettings, _retryPolicy.Execute(() => SerializeInternetSettings(RegistryHive.LocalMachine)))).Where(settings => settings.currentLocalMachineSettings.DetectChanges(settings.Item2).Any());
-            var currentUserMonitor = RegistryMonitor.ObserveChanges(RegistryHive.CurrentUser, InternetSettingsKey).ObserveOn(_uiSynchronizationContext).Select(unit => (currentUserSettings, _retryPolicy.Execute(() => SerializeInternetSettings(RegistryHive.CurrentUser)))).Where(settings => settings.currentUserSettings.DetectChanges(settings.Item2).Any());
+            var localMachineMonitor = RegistryMonitor.ObserveChanges(RegistryHive.LocalMachine, InternetSettingsKey).ObserveOn(_uiSynchronizationContext).Select(unit => (currentLocalMachineSettings, RetryPolicy.Execute(() => SerializeInternetSettings(RegistryHive.LocalMachine)))).Where(settings => settings.currentLocalMachineSettings.DetectChanges(settings.Item2).Any());
+            var currentUserMonitor = RegistryMonitor.ObserveChanges(RegistryHive.CurrentUser, InternetSettingsKey).ObserveOn(_uiSynchronizationContext).Select(unit => (currentUserSettings, RetryPolicy.Execute(() => SerializeInternetSettings(RegistryHive.CurrentUser)))).Where(settings => settings.currentUserSettings.DetectChanges(settings.Item2).Any());
 
             _monitorObservable = new CompositeDisposable
             {
