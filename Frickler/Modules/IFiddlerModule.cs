@@ -33,5 +33,9 @@ namespace Dapplo.Frickler.Modules
     /// </summary>
     public interface IFiddlerModule : IStartup, IShutdown
     {
+        /// <summary>
+        /// When the IFiddlerModule is already started, we can just "reatach"
+        /// </summary>
+        void Reattach();
     }
 }

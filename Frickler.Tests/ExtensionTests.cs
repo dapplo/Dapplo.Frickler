@@ -40,27 +40,11 @@ namespace Frickler.Tests
             after.Add("four", "IV");
 
             var changeList = before.DetectChanges(after).ToList();
-            Assert.Contains(new DictionaryChangeInfo<string, string>()
-            {
-                ChangeKind = DictionaryChangeKinds.Added,
-                Key = "three",
-                After = "3"
-            }, changeList);
+            Assert.Contains(DictionaryChangeInfo<string, string>.CreateAdded("three", "3"), changeList);
 
-            Assert.Contains(new DictionaryChangeInfo<string, string>()
-            {
-                ChangeKind = DictionaryChangeKinds.Removed,
-                Key = "two",
-                Before = "2"
-            }, changeList);
+            Assert.Contains(DictionaryChangeInfo<string, string>.CreateRemoved("two", "2"), changeList);
 
-            Assert.Contains(new DictionaryChangeInfo<string, string>()
-            {
-                ChangeKind = DictionaryChangeKinds.Changed,
-                Key = "four",
-                Before = "4",
-                After = "IV"
-            }, changeList);
+            Assert.Contains(DictionaryChangeInfo<string, string>.CreateChanged("four", "4", "IV"), changeList);
 
             Log.Info().WriteLine("\r\n" + string.Join("\r\n", before.DetectChanges(after)));
         }

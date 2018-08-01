@@ -32,21 +32,67 @@ namespace Dapplo.Frickler.Extensions
     public class DictionaryChangeInfo<TKey, TValue> : IEquatable<DictionaryChangeInfo<TKey, TValue>>
     {
         /// <summary>
+        /// Constructor for the DictionaryChangeInfo
+        /// </summary>
+        /// <param name="changeKind">DictionaryChangeKinds</param>
+        /// <param name="key">TKey</param>
+        /// <param name="before">TValue</param>
+        /// <param name="after">TValue</param>
+        public DictionaryChangeInfo(DictionaryChangeKinds changeKind, TKey key, TValue before, TValue after)
+        {
+            ChangeKind = changeKind;
+            Key = key;
+            Before = before;
+            After = after;
+        }
+
+        /// <summary>
+        /// Creates an CreateAdded DictionaryChangeInfo
+        /// </summary>
+        /// <param name="key">TKey</param>
+        /// <param name="addedValue">TValue</param>
+        public static DictionaryChangeInfo<TKey, TValue> CreateAdded(TKey key, TValue addedValue)
+        {
+            return new DictionaryChangeInfo<TKey, TValue>(DictionaryChangeKinds.Added, key, addedValue, default);
+        }
+
+        /// <summary>
+        /// Creates an Removed DictionaryChangeInfo
+        /// </summary>
+        /// <param name="key">TKey</param>
+        /// <param name="removedValue">TValue</param>
+        public static DictionaryChangeInfo<TKey, TValue> CreateRemoved(TKey key, TValue removedValue)
+        {
+            return new DictionaryChangeInfo<TKey, TValue>(DictionaryChangeKinds.Removed, key, default, removedValue);
+        }
+
+        /// <summary>
+        /// Creates an Changed DictionaryChangeInfo
+        /// </summary>
+        /// <param name="key">TKey</param>
+        /// <param name="oldValue">TValue</param>
+        /// <param name="newValue">TValue</param>
+        public static DictionaryChangeInfo<TKey, TValue> CreateChanged(TKey key, TValue oldValue, TValue newValue)
+        {
+            return new DictionaryChangeInfo<TKey, TValue>(DictionaryChangeKinds.Changed, key, oldValue, newValue);
+        }
+
+        /// <summary>
         /// Type of the change
         /// </summary>
-        public DictionaryChangeKinds ChangeKind { get; set; }
+        public DictionaryChangeKinds ChangeKind { get; }
         /// <summary>
         /// Key which is added, removed or changed
         /// </summary>
-        public TKey Key { get; set; }
+        public TKey Key { get; }
         /// <summary>
         /// Value before, filled when deleted or changed
         /// </summary>
-        public TValue Before { get; set; }
+        public TValue Before { get; }
         /// <summary>
         /// Value after, filled when added or changed
         /// </summary>
-        public TValue After { get; set; }
+        public TValue After { get; }
 
         /// <inheritdoc />
         public override bool Equals(object obj)

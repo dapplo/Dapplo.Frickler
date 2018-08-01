@@ -47,6 +47,7 @@ namespace Dapplo.Frickler
     public static class Startup
     {
         private static LogSource Log;
+
         /// <summary>
         ///     Start the application
         /// </summary>

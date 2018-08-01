@@ -114,8 +114,24 @@ namespace Dapplo.Frickler.Modules
             }
 
             Log.Info().WriteLine("Detaching proxy.");
-            FiddlerApplication.oProxy.Detach();
+            if (!FiddlerApplication.oProxy.Detach())
+            {
+                Log.Warn().WriteLine("couldn't detach proxy!?");
+            }
             FiddlerApplication.Shutdown();
+        }
+
+        /// <inheritdoc />
+        public void Reattach()
+        {
+            if (!_fiddlerConfiguration.IsEnabled)
+            {
+                return;
+            }
+
+            // Make sure the startup is called
+            Startup();
+            FiddlerApplication.oProxy.Attach();
         }
 
         /// <summary>

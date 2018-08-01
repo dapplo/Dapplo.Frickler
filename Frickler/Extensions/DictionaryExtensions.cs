@@ -46,23 +46,12 @@ namespace Dapplo.Frickler.Extensions
                     // Key was already there
                     if (!Equals(before[key], after[key]))
                     {
-                        yield return new DictionaryChangeInfo<TKey, TValue>
-                        {
-                            ChangeKind = DictionaryChangeKinds.Changed,
-                            Key = key,
-                            Before = before[key],
-                            After = after[key]
-                        };
+                        yield return DictionaryChangeInfo<TKey, TValue>.CreateChanged(key,before[key],after[key]);
                     }
                     continue;
                 }
 
-                yield return new DictionaryChangeInfo<TKey, TValue>
-                {
-                    ChangeKind = DictionaryChangeKinds.Added,
-                    Key = key,
-                    After = after[key]
-                };
+                yield return DictionaryChangeInfo<TKey, TValue>.CreateAdded(key, after[key]);
             }
 
             // Detect delete
@@ -73,12 +62,7 @@ namespace Dapplo.Frickler.Extensions
                     continue;
                 }
 
-                yield return new DictionaryChangeInfo<TKey, TValue>
-                {
-                    ChangeKind = DictionaryChangeKinds.Removed,
-                    Key = key,
-                    Before = before[key]
-                };
+                yield return DictionaryChangeInfo<TKey, TValue>.CreateRemoved(key, before[key]);
             }
         }
     }

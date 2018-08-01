@@ -25,7 +25,6 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Autofac.Features.AttributeFilters;
 using Dapplo.Addons;
 using Dapplo.CaliburnMicro.Toasts;
@@ -169,22 +168,8 @@ namespace Dapplo.Frickler.Modules
             {
                 _toastConductor.ActivateItem(_internetSettingsChangedToastViewModelFactory(changes));
             });
-            Task.Run(async () =>
-            {
-                try
-                {
-                    await Task.Run(() => _fiddlerModule.Shutdown()).ConfigureAwait(true);
-                    await Task.Delay(1000).ConfigureAwait(true);
-                    await Task.Run(() => _fiddlerModule.Startup()).ConfigureAwait(true);
-                    await Task.Delay(1000).ConfigureAwait(true);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error().WriteLine(ex, "Problem restarting the proxy:");
-                }
-
-                MonitorInternetSettingsChanges();
-            });
+            _fiddlerModule.Reattach();
+            MonitorInternetSettingsChanges();
         }
     }
 }
