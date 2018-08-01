@@ -39,7 +39,8 @@
 		         mahapps:TextBoxHelper.ClearTextButton="True"
 		         IsEnabled="{Binding FiddlerConfiguration.AutomaticallyAuthenticate}" />
 
-		<CheckBox Content="{Binding FricklerTranslations.ManageHttpProxy}" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
-		          IsChecked="{Binding FiddlerConfiguration.ManageProxyEnvironmentVariables}" />
+		<CheckBox  Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" IsChecked="{Binding FiddlerConfiguration.ManageProxyEnvironmentVariables}">
+			<TextBlock Text="{Binding FricklerTranslations.ManageHttpProxy}"/>
+		</CheckBox>
 	</Grid>
 </UserControl>
