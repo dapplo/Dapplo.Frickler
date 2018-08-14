@@ -46,7 +46,7 @@ namespace Dapplo.Frickler
     /// </summary>
     public static class Startup
     {
-        private static LogSource Log;
+        private static readonly LogSource Log = new LogSource();
 
         /// <summary>
         ///     Start the application
@@ -58,7 +58,6 @@ namespace Dapplo.Frickler
             // Initialize a debug logger for Dapplo packages
             LogSettings.RegisterDefaultLogger<DebugLogger>(LogLevels.Debug);
 #endif
-            Log = new LogSource();
             // TODO: Set via build
             StringEncryptionTypeConverter.RgbIv = "dlgjowejgogkklwj";
             StringEncryptionTypeConverter.RgbKey = "lsjvkwhvwujkagfauguwcsjgu2wueuff";
