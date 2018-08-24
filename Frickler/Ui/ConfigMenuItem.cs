@@ -48,6 +48,7 @@ namespace Dapplo.Frickler.Ui
             {
                 Kind = PackIconMaterialKind.Settings
             };
+
             ClickAction = item =>
             {
                 IsEnabled = false;

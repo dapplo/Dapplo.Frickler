@@ -33,6 +33,7 @@ using Dapplo.CaliburnMicro.Menu;
 using Dapplo.CaliburnMicro.NotifyIconWpf;
 using Dapplo.CaliburnMicro.NotifyIconWpf.ViewModels;
 using Dapplo.Frickler.Configuration;
+using Dapplo.Windows.Common;
 using MahApps.Metro.IconPacks;
 
 #endregion
@@ -121,8 +122,8 @@ namespace Dapplo.Frickler.Ui.ViewModels
             SetIcon(new PackIconMaterial
             {
                 Kind = PackIconMaterialKind.Network,
-                Background = Brushes.White,
-                Foreground = Brushes.Black
+                Background = WindowsVersion.IsWindows10OrLater ? Brushes.Transparent : Brushes.White,
+                Foreground = WindowsVersion.IsWindows10OrLater ? Brushes.White : Brushes.Black,
             });
             Show();
         }

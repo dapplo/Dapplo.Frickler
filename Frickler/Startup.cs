@@ -33,6 +33,8 @@ using Dapplo.CaliburnMicro.Dapp;
 using Dapplo.Frickler.Ui.ViewModels;
 using Dapplo.Ini.Converters;
 using Dapplo.Log;
+using Dapplo.Log.LogFile;
+
 #if DEBUG
 using Dapplo.Log.Loggers;
 #endif
@@ -57,16 +59,20 @@ namespace Dapplo.Frickler
 #if DEBUG
             // Initialize a debug logger for Dapplo packages
             LogSettings.RegisterDefaultLogger<DebugLogger>(LogLevels.Debug);
+#else
+            LogSettings.RegisterDefaultLogger<ForwardingLogger>(LogLevels.Debug);
 #endif
+
             // TODO: Set via build
             StringEncryptionTypeConverter.RgbIv = "dlgjowejgogkklwj";
             StringEncryptionTypeConverter.RgbKey = "lsjvkwhvwujkagfauguwcsjgu2wueuff";
 
             // Use this to setup the culture of your UI
-            var cultureInfo = CultureInfo.GetCultureInfo("de-DE");
+            var cultureInfo = CultureInfo.GetCultureInfo("en-US");
             Thread.CurrentThread.CurrentCulture = cultureInfo;
             Thread.CurrentThread.CurrentUICulture = cultureInfo;
 
+            Log.Info().WriteLine("Windows version {0}", Environment.OSVersion.Version);
             var applicationConfig = ApplicationConfigBuilder
                 .Create()
                 .WithApplicationName("Frickler")
