@@ -25,6 +25,7 @@
 using System;
 using System.Reactive.Disposables;
 using Dapplo.Addons;
+using Dapplo.CaliburnMicro;
 using Dapplo.Frickler.Configuration;
 using Dapplo.Log;
 using Fiddler;
@@ -36,7 +37,7 @@ namespace Dapplo.Frickler.Modules
     /// <summary>
     ///     The actual fiddler code
     /// </summary>
-    [Service(nameof(FiddlerModule))]
+    [Service(nameof(FiddlerModule), nameof(CaliburnServices.IniSectionService))]
     public class FiddlerModule : IFiddlerModule
     {
         private static readonly LogSource Log = new LogSource();

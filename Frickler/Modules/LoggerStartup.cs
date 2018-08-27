@@ -23,6 +23,7 @@
 #region Usings
 
 using Dapplo.Addons;
+using Dapplo.CaliburnMicro;
 using Dapplo.Frickler.Configuration;
 using Dapplo.Log;
 #if !DEBUG
@@ -36,7 +37,7 @@ namespace Dapplo.Frickler.Modules
     /// <summary>
     ///     Initialize the logging
     /// </summary>
-    [Service(nameof(LoggerStartup))]
+    [Service(nameof(LoggerStartup), nameof(CaliburnServices.IniSectionService))]
     public class LoggerStartup : IStartup
     {
         private readonly ILogConfiguration _logConfiguration;

@@ -33,10 +33,11 @@ using Dapplo.CaliburnMicro.Dapp;
 using Dapplo.Frickler.Ui.ViewModels;
 using Dapplo.Ini.Converters;
 using Dapplo.Log;
-using Dapplo.Log.LogFile;
 
 #if DEBUG
 using Dapplo.Log.Loggers;
+#else
+using Dapplo.Log.LogFile;
 #endif
 
 #endregion
@@ -58,7 +59,7 @@ namespace Dapplo.Frickler
         {
 #if DEBUG
             // Initialize a debug logger for Dapplo packages
-            LogSettings.RegisterDefaultLogger<DebugLogger>(LogLevels.Debug);
+            LogSettings.RegisterDefaultLogger<DebugLogger>(LogLevels.Verbose);
 #else
             LogSettings.RegisterDefaultLogger<ForwardingLogger>(LogLevels.Debug);
 #endif
