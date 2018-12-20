@@ -1,0 +1,49 @@
+﻿<Project>
+  <PropertyGroup>
+    <Copyright>Copyright © Dapplo 2016-2018</Copyright>
+    <Authors>Dapplo</Authors>
+	<RepositoryUrl>https://github.com/dapplo/Dapplo.Frickler</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+	<LangVersion>latest</LangVersion>
+	<CopyLocalLockFileAssemblies Condition="'$(TargetFramework)' != 'net471'">true</CopyLocalLockFileAssemblies>
+	<Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
+	<DisableImplicitFrameworkReferences Condition="'$(TargetFramework)' == 'net471'">true</DisableImplicitFrameworkReferences>
+	<UseWPF>true</UseWPF>
+	<UseWindowsForms>false</UseWindowsForms>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' != 'Debug' And !$(MSBuildProjectName.Contains('Test')) And !$(MSBuildProjectName.Contains('Demo'))">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(MSBuildProjectName.Contains('Tests')) Or $(MSBuildProjectName.Contains('Demo'))">
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>  
+	
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugSymbols>True</DebugSymbols>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <DebugType>Full</DebugType>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+	<Optimize>true</Optimize>
+	<DebugType>pdbonly</DebugType>
+    <DebugSymbols>True</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup Condition="!$(MSBuildProjectName.Contains('Test')) And !$(MSBuildProjectName.Contains('Demo'))">
+    <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.38">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="PdbGit" Version="3.0.41">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>
