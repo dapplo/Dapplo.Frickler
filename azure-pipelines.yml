@@ -38,7 +38,7 @@ steps:
     SourceFolder: '$(system.defaultworkingdirectory)'
     Contents: |
      **\bin\$(BuildConfiguration)\*.exe
-	 **\bin\$(BuildConfiguration)\*.exe.config
+     **\bin\$(BuildConfiguration)\*.exe.config
     TargetFolder: '$(build.artifactstagingdirectory)'
     flattenFolders: true
 
