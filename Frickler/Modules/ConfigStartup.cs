@@ -23,7 +23,7 @@
 #region Usings
 
 using Dapplo.Addons;
-using Dapplo.Ini.Converters;
+using Dapplo.Config.Ini.Converters;
 
 #endregion
 

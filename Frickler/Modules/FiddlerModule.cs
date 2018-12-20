@@ -37,7 +37,7 @@ namespace Dapplo.Frickler.Modules
     /// <summary>
     ///     The actual fiddler code
     /// </summary>
-    [Service(nameof(FiddlerModule), nameof(CaliburnServices.IniSectionService))]
+    [Service(nameof(FiddlerModule), nameof(CaliburnServices.ConfigurationService))]
     public class FiddlerModule : IFiddlerModule
     {
         private static readonly LogSource Log = new LogSource();

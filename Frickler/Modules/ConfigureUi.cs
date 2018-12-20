@@ -18,24 +18,30 @@
 // 
 // You should have a copy of the GNU Lesser General Public License
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
-// 
 
-#region Usings
+using System;
+using Dapplo.Addons;
+using Dapplo.CaliburnMicro;
 
-using System.ComponentModel;
-using Dapplo.Config.Ini;
-using Dapplo.Log.LogFile;
-
-#endregion
-
-namespace Dapplo.Frickler.Configuration
+namespace Dapplo.Frickler.Modules
 {
-    /// <summary>
-    ///     Store all log specific settings, currently only FileLogger settings are here
-    /// </summary>
-    [IniSection("Log")]
-    [Description("Log configuration")]
-    public interface ILogConfiguration : IFileLoggerConfiguration, IIniSection
+    /// <inheritdoc />
+    [Service(nameof(ConfigureUiDefaults), nameof(CaliburnServices.ConfigurationService), TaskSchedulerName = "ui")]
+    public class ConfigureUiDefaults : IStartup
     {
+        private readonly ResourceManager _resourceManager;
+
+        /// <inheritdoc />
+        public ConfigureUiDefaults(ResourceManager resourceManager)
+        {
+            _resourceManager = resourceManager;
+        }
+
+        /// <inheritdoc />
+        public void Startup()
+        {
+            var fricklerResourceDirectory = new Uri("pack://application:,,,/Frickler;component/FricklerResourceDirectory.xaml", UriKind.RelativeOrAbsolute);
+            _resourceManager.AddResourceDictionary(fricklerResourceDirectory);
+        }
     }
 }

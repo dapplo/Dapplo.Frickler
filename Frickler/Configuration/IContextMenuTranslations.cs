@@ -23,7 +23,7 @@
 #region Usings
 
 using System.ComponentModel;
-using Dapplo.Language;
+using Dapplo.Config.Language;
 
 #endregion
 
@@ -33,7 +33,7 @@ namespace Dapplo.Frickler.Configuration
     ///     The translations for the context menu
     /// </summary>
     [Language("ContextMenu")]
-    public interface IContextMenuTranslations : ILanguage, INotifyPropertyChanged
+    public interface IContextMenuTranslations : ILanguage
     {
         /// <summary>
         ///     The translation of the exit entry in the context menu

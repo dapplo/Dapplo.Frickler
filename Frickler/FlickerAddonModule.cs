@@ -24,7 +24,12 @@ using Autofac.Features.AttributeFilters;
 using Dapplo.Addons;
 using Dapplo.CaliburnMicro.Configuration;
 using Dapplo.CaliburnMicro.Menu;
+using Dapplo.CaliburnMicro.Metro.Configuration;
 using Dapplo.CaliburnMicro.NotifyIconWpf;
+using Dapplo.Config.Ini;
+using Dapplo.Config.Language;
+using Dapplo.Frickler.Configuration;
+using Dapplo.Frickler.Configuration.Impl;
 using Dapplo.Frickler.Modules;
 using Dapplo.Frickler.Ui.ViewModels;
 
@@ -42,10 +47,41 @@ namespace Dapplo.Frickler
                 .As<IMenuItem>()
                 .SingleInstance();
 
+            builder
+                .RegisterType<ContextMenuTranslationsImpl>()
+                .As<ILanguage>()
+                .As<IContextMenuTranslations>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<FricklerTranslationsImpl>()
+                .As<ILanguage>()
+                .As<IFricklerTranslations>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<LogConfigurationImpl>()
+                .As<IIniSection>()
+                .As<ILogConfiguration>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<FiddlerConfigurationImpl>()
+                .As<IIniSection>()
+                .As<IFiddlerConfiguration>()
+                .As<IMetroUiConfiguration>()
+                .SingleInstance();
+
             // All config screens
             builder.RegisterAssemblyTypes(ThisAssembly)
                 .AssignableTo<IConfigScreen>()
                 .As<IConfigScreen>()
+                .SingleInstance();
+
+            
+            builder
+                .RegisterType<ConfigureUiDefaults>()
+                .As<IService>()
                 .SingleInstance();
 
             builder

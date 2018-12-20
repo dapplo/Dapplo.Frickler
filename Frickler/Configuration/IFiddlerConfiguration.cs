@@ -23,9 +23,9 @@
 #region Usings
 
 using System.ComponentModel;
-using Dapplo.Ini;
-using Dapplo.Ini.Converters;
-using Dapplo.InterfaceImpl.Extensions;
+using Dapplo.CaliburnMicro.Metro.Configuration;
+using Dapplo.Config.Ini;
+using Dapplo.Config.Ini.Converters;
 
 #endregion
 
@@ -35,7 +35,7 @@ namespace Dapplo.Frickler.Configuration
     ///     This defines the configuration needed for Fiddler
     /// </summary>
     [IniSection("Fiddler")]
-    public interface IFiddlerConfiguration : IIniSection, INotifyPropertyChanged, IDefaultValue, ITransactionalProperties
+    public interface IFiddlerConfiguration : IIniSection, IMetroUiConfiguration
     {
         /// <summary>
         ///     Describes if fiddler is active

@@ -24,7 +24,7 @@
 
 using System.ComponentModel;
 using Dapplo.CaliburnMicro.Translations;
-using Dapplo.Language;
+using Dapplo.Config.Language;
 
 #endregion
 
@@ -34,7 +34,7 @@ namespace Dapplo.Frickler.Configuration
     ///     The translations for Frickler
     /// </summary>
     [Language("Frickler")]
-    public interface IFricklerTranslations : ILanguage, IConfigTranslations, ICoreTranslations, INotifyPropertyChanged
+    public interface IFricklerTranslations : ILanguage, IConfigTranslations, ICoreTranslations
     {
         /// <summary>
         ///     The translation for the enable fiddle checkbox in the configuration

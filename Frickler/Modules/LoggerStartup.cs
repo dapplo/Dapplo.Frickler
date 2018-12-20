@@ -37,7 +37,7 @@ namespace Dapplo.Frickler.Modules
     /// <summary>
     ///     Initialize the logging
     /// </summary>
-    [Service(nameof(LoggerStartup), nameof(CaliburnServices.IniSectionService))]
+    [Service(nameof(LoggerStartup), nameof(CaliburnServices.ConfigurationService))]
     public class LoggerStartup : IStartup
     {
         private readonly ILogConfiguration _logConfiguration;

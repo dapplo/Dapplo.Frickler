@@ -18,24 +18,20 @@
 // 
 // You should have a copy of the GNU Lesser General Public License
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
-// 
 
-#region Usings
+using Dapplo.Config.Language;
+// ReSharper disable UnassignedGetOnlyAutoProperty
+#pragma warning disable 1591
 
-using System.ComponentModel;
-using Dapplo.Config.Ini;
-using Dapplo.Log.LogFile;
-
-#endregion
-
-namespace Dapplo.Frickler.Configuration
+namespace Dapplo.Frickler.Configuration.Impl
 {
-    /// <summary>
-    ///     Store all log specific settings, currently only FileLogger settings are here
-    /// </summary>
-    [IniSection("Log")]
-    [Description("Log configuration")]
-    public interface ILogConfiguration : IFileLoggerConfiguration, IIniSection
+    public class ContextMenuTranslationsImpl : LanguageBase<IContextMenuTranslations>, IContextMenuTranslations
     {
+        #region Implementation of IContextMenuTranslations
+
+        public string Exit { get; }
+        public string Title { get; }
+
+        #endregion
     }
 }
