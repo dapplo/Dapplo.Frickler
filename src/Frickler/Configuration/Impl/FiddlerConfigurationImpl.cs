@@ -34,7 +34,6 @@ namespace Dapplo.Frickler.Configuration.Impl
         {
             _metroThemeManager = metroThemeManager;
         }
-        #region Implementation of IFiddlerConfiguration
 
         public bool IsEnabled { get; set; }
         public bool ManageProxyEnvironmentVariables { get; set; }
@@ -44,25 +43,24 @@ namespace Dapplo.Frickler.Configuration.Impl
         public string ProxyUser { get; set; }
         public string ProxyPassword { get; set; }
 
-        #endregion
-
-        #region Implementation of IMetroUiConfiguration
-
         public string Theme { get; set; }
 
         public string ThemeColor { get; set; }
 
-        #endregion
-
-        #region Overrides of IniSectionBase<IFiddlerConfiguration>
 
         public override void AfterLoad()
         {
+            if (string.IsNullOrEmpty(Theme))
+            {
+                Theme = null;
+            }
+            if (string.IsNullOrEmpty(ThemeColor))
+            {
+                ThemeColor = null;
+            }
             _metroThemeManager.ChangeTheme(Theme, ThemeColor);
 
             base.AfterLoad();
         }
-
-        #endregion
     }
 }

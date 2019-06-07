@@ -53,7 +53,7 @@ namespace Dapplo.Frickler.Modules
         /// </summary>
         public void Startup()
         {
-            _logConfiguration.Preformat = true;
+            _logConfiguration.PreFormat = true;
             _logConfiguration.WriteInterval = 100;
 
             // TODO: Decide on the log level, make available in the UI?

@@ -39,10 +39,10 @@ namespace Dapplo.Frickler.Configuration.Impl
 
         #region Implementation of IFileLoggerConfiguration
 
-        public bool Preformat { get; set; }
+        public bool PreFormat { get; set; }
         public int MaxBufferSize { get; set; }
         public int WriteInterval { get; set; }
-        public string Processname { get; set; }
+        public string ProcessName { get; set; }
         public string Extension { get; set; }
         public string FilenamePattern { get; set; }
         public string DirectoryPath { get; set; }
