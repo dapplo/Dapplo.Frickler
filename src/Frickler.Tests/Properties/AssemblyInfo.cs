@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Frickler.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ING-DiBa AG")]
+[assembly: AssemblyCompany("Dapplo")]
 [assembly: AssemblyProduct("Frickler.Tests")]
-[assembly: AssemblyCopyright("Copyright © ING-DiBa AG 2018")]
+[assembly: AssemblyCopyright("Copyright © Dapplo 2017-2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

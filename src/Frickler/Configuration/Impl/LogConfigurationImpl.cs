@@ -1,5 +1,5 @@
 ﻿// Dapplo - building blocks for desktop applications
-// Copyright (C) 2017-2018  Dapplo
+// Copyright (C) 2017-2019  Dapplo
 // 
 // For more information see: http://dapplo.net/
 // Dapplo repositories are hosted on GitHub: https://github.com/dapplo
@@ -42,7 +42,7 @@ namespace Dapplo.Frickler.Configuration.Impl
         public bool PreFormat { get; set; }
         public int MaxBufferSize { get; set; }
         public int WriteInterval { get; set; }
-        public string ProcessName { get; set; }
+        public string Processname { get; set; }
         public string Extension { get; set; }
         public string FilenamePattern { get; set; }
         public string DirectoryPath { get; set; }
