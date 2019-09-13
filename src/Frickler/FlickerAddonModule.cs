@@ -24,12 +24,12 @@ using Autofac.Features.AttributeFilters;
 using Dapplo.Addons;
 using Dapplo.CaliburnMicro.Configuration;
 using Dapplo.CaliburnMicro.Menu;
+using Dapplo.CaliburnMicro.Metro;
 using Dapplo.CaliburnMicro.Metro.Configuration;
 using Dapplo.CaliburnMicro.NotifyIconWpf;
 using Dapplo.Config.Ini;
 using Dapplo.Config.Language;
 using Dapplo.Frickler.Configuration;
-using Dapplo.Frickler.Configuration.Impl;
 using Dapplo.Frickler.Modules;
 using Dapplo.Frickler.Ui.ViewModels;
 
@@ -48,28 +48,45 @@ namespace Dapplo.Frickler
                 .SingleInstance();
 
             builder
-                .RegisterType<ContextMenuTranslationsImpl>()
+                .Register(c => Language<IContextMenuTranslations>.Create())
                 .As<ILanguage>()
                 .As<IContextMenuTranslations>()
                 .SingleInstance();
 
             builder
-                .RegisterType<FricklerTranslationsImpl>()
+                .Register(c => Language<IFricklerTranslations>.Create())
                 .As<ILanguage>()
                 .As<IFricklerTranslations>()
                 .SingleInstance();
 
             builder
-                .RegisterType<LogConfigurationImpl>()
+                .Register(c => IniSection<ILogConfiguration>.Create())
                 .As<IIniSection>()
                 .As<ILogConfiguration>()
                 .SingleInstance();
 
             builder
-                .RegisterType<FiddlerConfigurationImpl>()
-                .As<IIniSection>()
-                .As<IFiddlerConfiguration>()
+                .Register(c =>
+                {
+                    var metroConfiguration = IniSection<IFiddlerConfiguration>.Create();
+
+                    // add specific code
+                    var metroThemeManager = c.Resolve<MetroThemeManager>();
+
+                    metroConfiguration.RegisterAfterLoad(iniSection =>
+                    {
+                        if (!(iniSection is IMetroUiConfiguration metroConfig))
+                        {
+                            return;
+                        }
+
+                        metroThemeManager.ChangeTheme(metroConfig.Theme, metroConfig.ThemeColor);
+                    });
+                    return metroConfiguration;
+                })
                 .As<IMetroUiConfiguration>()
+                .As<IFiddlerConfiguration>()
+                .As<IIniSection>()
                 .SingleInstance();
 
             // All config screens
@@ -77,7 +94,6 @@ namespace Dapplo.Frickler
                 .AssignableTo<IConfigScreen>()
                 .As<IConfigScreen>()
                 .SingleInstance();
-
             
             builder
                 .RegisterType<ConfigureUiDefaults>()

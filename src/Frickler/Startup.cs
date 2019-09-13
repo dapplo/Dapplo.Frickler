@@ -77,8 +77,6 @@ namespace Dapplo.Frickler
                 .Create()
                 .WithApplicationName("Frickler")
                 .WithMutex("AD5323E2-7614-46F2-8F80-2F8667970367")
-                .WithoutCopyOfEmbeddedAssemblies()
-                .WithoutCopyOfAssembliesToProbingPath()
                 .WithCaliburnMicro()
                 .BuildApplicationConfig();
 

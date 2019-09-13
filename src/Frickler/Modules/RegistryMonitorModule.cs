@@ -26,12 +26,12 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
 using Autofac.Features.AttributeFilters;
+using Caliburn.Micro;
 using Dapplo.Addons;
 using Dapplo.CaliburnMicro.Toasts;
 using Dapplo.Frickler.Extensions;
 using Dapplo.Frickler.Ui.ViewModels;
 using Dapplo.Log;
-using Dapplo.Utils;
 using Dapplo.Windows.Advapi32;
 using Microsoft.Win32;
 using Polly;
@@ -152,7 +152,12 @@ namespace Dapplo.Frickler.Modules
 
             _monitorObservable = new CompositeDisposable
             {
-                localMachineMonitor.Merge(currentUserMonitor).Throttle(TimeSpan.FromSeconds(10)).Subscribe(s => ProcessInternetSettingsChange(s.Item1, s.Item2))
+                localMachineMonitor
+                    .Merge(currentUserMonitor)
+                    .Throttle(TimeSpan.FromSeconds(10))
+                    .ObserveOn(_uiSynchronizationContext)
+                    .SubscribeOn(_uiSynchronizationContext)
+                    .Subscribe(s => ProcessInternetSettingsChange(s.Item1, s.Item2))
             };
             Log.Debug().WriteLine("Now monitoring changes to the Internet Settings!");
         }
@@ -164,10 +169,7 @@ namespace Dapplo.Frickler.Modules
             Log.Info().WriteLine(string.Join("\r\n", changes));
             // Make sure while restarting, other changes don't disturb the restart
             _monitorObservable?.Dispose();
-            UiContext.RunOn(() =>
-            {
-                _toastConductor.ActivateItem(_internetSettingsChangedToastViewModelFactory(changes));
-            });
+            _toastConductor.ActivateItem(_internetSettingsChangedToastViewModelFactory(changes));
             _fiddlerModule.Reattach();
             MonitorInternetSettingsChanges();
         }
