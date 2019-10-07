@@ -20,14 +20,10 @@
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 // 
 
-#region Usings
-
 using System.ComponentModel;
 using Dapplo.Config.Language;
 
-#endregion
-
-namespace Dapplo.Frickler.Configuration
+namespace Frickler.Configuration
 {
     /// <summary>
     ///     The translations for the context menu

@@ -20,16 +20,13 @@
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 // 
 
-#region Usings
-
+using System;
 using Dapplo.CaliburnMicro.Configuration;
 using Dapplo.CaliburnMicro.Extensions;
-using Dapplo.Frickler.Configuration;
-using Dapplo.Frickler.Modules;
+using Frickler.Configuration;
+using Frickler.Modules;
 
-#endregion
-
-namespace Dapplo.Frickler.Ui.ViewModels
+namespace Frickler.Ui.ViewModels
 {
     /// <summary>
     ///     The fiddler config ViewModel
@@ -37,7 +34,7 @@ namespace Dapplo.Frickler.Ui.ViewModels
     public sealed class FiddlerConfigViewModel : SimpleConfigScreen
     {
         private readonly IFiddlerModule _fiddlerModule;
-
+        private IDisposable _displayNameBinding;
         /// <summary>
         ///     construct the ViewModel
         /// </summary>
@@ -53,7 +50,7 @@ namespace Dapplo.Frickler.Ui.ViewModels
             Id = "C_Fiddler";
             FiddlerConfiguration = fiddlerConfiguration;
             FricklerTranslations = fricklerTranslations;
-            fricklerTranslations.CreateDisplayNameBinding(this, nameof(IFricklerTranslations.Title));
+            _displayNameBinding = FricklerTranslations.CreateDisplayNameBinding(this, nameof(IFricklerTranslations.Title));
         }
 
         /// <summary>

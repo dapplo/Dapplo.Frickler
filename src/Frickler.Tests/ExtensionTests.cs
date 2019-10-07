@@ -21,9 +21,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Dapplo.Frickler.Extensions;
 using Dapplo.Log;
 using Dapplo.Log.XUnit;
+using Frickler.Extensions;
 using Xunit;
 using Xunit.Abstractions;
 

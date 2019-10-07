@@ -20,13 +20,9 @@
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 // 
 
-#region Usings
-
 using Dapplo.Addons;
 
-#endregion
-
-namespace Dapplo.Frickler.Modules
+namespace Frickler.Modules
 {
     /// <summary>
     ///     The interface for the Fiddler module

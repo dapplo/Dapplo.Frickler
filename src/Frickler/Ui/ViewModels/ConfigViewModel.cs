@@ -19,19 +19,15 @@
 // You should have a copy of the GNU Lesser General Public License
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
-#region Usings
-
 using System;
 using System.Collections.Generic;
 using Dapplo.CaliburnMicro;
 using Dapplo.CaliburnMicro.Configuration;
 using Dapplo.CaliburnMicro.Extensions;
 using Dapplo.CaliburnMicro.Translations;
-using Dapplo.Frickler.Configuration;
+using Frickler.Configuration;
 
-#endregion
-
-namespace Dapplo.Frickler.Ui.ViewModels
+namespace Frickler.Ui.ViewModels
 {
     /// <summary>
     ///     The settings view model is, well... for the settings :)
@@ -39,6 +35,8 @@ namespace Dapplo.Frickler.Ui.ViewModels
     /// </summary>
     public sealed class ConfigViewModel : Config<IConfigScreen>, IMaintainPosition
     {
+        private IDisposable _displayNameBinding;
+
         /// <summary>
         ///     Constructor which takes care of exporting the ConfigMenuItem
         /// </summary>
@@ -72,7 +70,16 @@ namespace Dapplo.Frickler.Ui.ViewModels
         {
             base.OnActivate();
             // automatically update the DisplayName
-            FricklerTranslations.CreateDisplayNameBinding(this, nameof(IFricklerTranslations.Configuration));
+            _displayNameBinding?.Dispose();
+            _displayNameBinding = FricklerTranslations.CreateDisplayNameBinding(this, nameof(IFricklerTranslations.Configuration));
+        }
+
+        /// <inheritdoc />
+        public override void DeactivateItem(IConfigScreen item, bool close)
+        {
+            base.DeactivateItem(item, close);
+            _displayNameBinding?.Dispose();
+            _displayNameBinding = null;
         }
     }
 }

@@ -26,18 +26,17 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
 using Autofac.Features.AttributeFilters;
-using Caliburn.Micro;
 using Dapplo.Addons;
 using Dapplo.CaliburnMicro.Toasts;
-using Dapplo.Frickler.Extensions;
-using Dapplo.Frickler.Ui.ViewModels;
 using Dapplo.Log;
 using Dapplo.Windows.Advapi32;
+using Frickler.Extensions;
+using Frickler.Ui.ViewModels;
 using Microsoft.Win32;
 using Polly;
 using Polly.Retry;
 
-namespace Dapplo.Frickler.Modules
+namespace Frickler.Modules
 {
     /// <summary>
     /// This takes care of monitoring the registry for changes in the network/internet settings which the proxy needs to know of

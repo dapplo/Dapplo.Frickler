@@ -21,10 +21,10 @@
 
 using System.Collections.Generic;
 using Dapplo.CaliburnMicro.Toasts.ViewModels;
-using Dapplo.Frickler.Configuration;
-using Dapplo.Frickler.Extensions;
+using Frickler.Configuration;
+using Frickler.Extensions;
 
-namespace Dapplo.Frickler.Ui.ViewModels
+namespace Frickler.Ui.ViewModels
 {
     /// <summary>
     /// A toast which informs the user that the internet settings have been changed

@@ -20,19 +20,16 @@
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 // 
 
-#region Usings
-
 using Dapplo.Addons;
 using Dapplo.CaliburnMicro;
-using Dapplo.Frickler.Configuration;
 using Dapplo.Log;
+using Frickler.Configuration;
+
 #if !DEBUG
 using Dapplo.Log.LogFile;
 #endif
 
-#endregion
-
-namespace Dapplo.Frickler.Modules
+namespace Frickler.Modules
 {
     /// <summary>
     ///     Initialize the logging

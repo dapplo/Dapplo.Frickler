@@ -20,8 +20,6 @@
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 // 
 
-#region Usings
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,13 +30,12 @@ using Dapplo.CaliburnMicro.Extensions;
 using Dapplo.CaliburnMicro.Menu;
 using Dapplo.CaliburnMicro.NotifyIconWpf;
 using Dapplo.CaliburnMicro.NotifyIconWpf.ViewModels;
-using Dapplo.Frickler.Configuration;
 using Dapplo.Windows.Common;
+using Frickler.Configuration;
 using MahApps.Metro.IconPacks;
+using System.Reactive.Disposables;
 
-#endregion
-
-namespace Dapplo.Frickler.Ui.ViewModels
+namespace Frickler.Ui.ViewModels
 {
     /// <summary>
     ///     This take care of the tray icon and context-menu
@@ -47,6 +44,7 @@ namespace Dapplo.Frickler.Ui.ViewModels
     {
         private readonly IEnumerable<Lazy<IMenuItem>> _contextMenuItems;
         private readonly IContextMenuTranslations _contextMenuTranslations;
+        private IDisposable _disposables;
 
         /// <summary>
         ///     Construct the SystemTrayContextMenuViewModel with it's dependencies
@@ -68,8 +66,6 @@ namespace Dapplo.Frickler.Ui.ViewModels
         {
             base.OnActivate();
 
-            // Set the title of the icon (the ToolTipText) to our IContextMenuTranslations.Title
-            _contextMenuTranslations.CreateDisplayNameBinding(this, nameof(IContextMenuTranslations.Title));
 
             var items = new List<IMenuItem>();
 
@@ -87,7 +83,6 @@ namespace Dapplo.Frickler.Ui.ViewModels
                     Foreground = Brushes.Black
                 }
             };
-            _contextMenuTranslations.CreateDisplayNameBinding(titleItem, nameof(IContextMenuTranslations.Title));
             titleItem.ApplyIconForegroundColor(Brushes.DarkRed);
             items.Add(titleItem);
             items.Add(new MenuItem
@@ -111,7 +106,15 @@ namespace Dapplo.Frickler.Ui.ViewModels
                 ClickAction = clickedItem => { Application.Current.Shutdown(); }
             };
             exitItem.ApplyIconForegroundColor(Brushes.DarkRed);
-            _contextMenuTranslations.CreateDisplayNameBinding(exitItem, nameof(IContextMenuTranslations.Exit));
+
+            _disposables = new CompositeDisposable
+            {
+                // Set the title of the icon (the ToolTipText) to our IContextMenuTranslations.Title
+                _contextMenuTranslations.CreateDisplayNameBinding(this, nameof(IContextMenuTranslations.Title)),
+                _contextMenuTranslations.CreateDisplayNameBinding(titleItem, nameof(IContextMenuTranslations.Title)),
+                _contextMenuTranslations.CreateDisplayNameBinding(exitItem, nameof(IContextMenuTranslations.Exit))
+            };
+
             items.Add(exitItem);
 
             ConfigureMenuItems(items);
@@ -126,6 +129,21 @@ namespace Dapplo.Frickler.Ui.ViewModels
                 Foreground = WindowsVersion.IsWindows10OrLater ? Brushes.White : Brushes.Black,
             });
             Show();
+        }
+
+        /// <inheritdoc />
+        protected override void OnDeactivate(bool close)
+        {
+            base.OnDeactivate(close);
+            foreach (var item in _contextMenuItems.Select(lazy => lazy.Value))
+            {
+                if (item is IDisposable disposable)
+                {
+
+                }
+            }
+            _disposables?.Dispose();
+            _disposables = null;
         }
     }
 }

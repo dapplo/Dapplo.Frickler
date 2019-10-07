@@ -21,7 +21,7 @@
 
 using System.Collections.Generic;
 
-namespace Dapplo.Frickler.Extensions
+namespace Frickler.Extensions
 {
     /// <summary>
     /// Extensions to help IDictionary 

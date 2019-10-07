@@ -12,22 +12,13 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: DotNetCoreInstaller@2
-  displayName: 'Install .NET Core SDK 3.0'
-  inputs:
-    version: '3.0.100-rc2-014241'
+- task: NuGetToolInstaller@1
 
-- task: NuGetToolInstaller@0
-  displayName: 'Use NuGet 5.2.0'
+- task: UseDotNet@2
+  displayName: 'Use .NET Core sdk 3.0'
   inputs:
-    versionSpec: 5.2.0
-    checkLatest: true
-
-- task: NuGetCommand@2
-  displayName: NuGet restore
-  inputs:
-    restoreSolution: '$(solution)'
-    feedsToUse: config
+    packageType: sdk
+    version: 3.0.100
 
 - task: DotNetCoreCLI@2
   displayName: Publish single-exe x64

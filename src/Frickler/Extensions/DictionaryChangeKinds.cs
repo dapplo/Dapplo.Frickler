@@ -19,7 +19,7 @@
 // You should have a copy of the GNU Lesser General Public License
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
-namespace Dapplo.Frickler.Extensions
+namespace Frickler.Extensions
 {
     /// <summary>
     /// Describes what kind of change was made

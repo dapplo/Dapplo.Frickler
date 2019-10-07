@@ -29,11 +29,11 @@ using Dapplo.CaliburnMicro.Metro.Configuration;
 using Dapplo.CaliburnMicro.NotifyIconWpf;
 using Dapplo.Config.Ini;
 using Dapplo.Config.Language;
-using Dapplo.Frickler.Configuration;
-using Dapplo.Frickler.Modules;
-using Dapplo.Frickler.Ui.ViewModels;
+using Frickler.Configuration;
+using Frickler.Modules;
+using Frickler.Ui.ViewModels;
 
-namespace Dapplo.Frickler
+namespace Frickler
 {
     /// <inheritdoc />
     public class FlickerAddonModule : AddonModule

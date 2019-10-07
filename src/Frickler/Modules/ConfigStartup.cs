@@ -20,14 +20,10 @@
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 // 
 
-#region Usings
-
 using Dapplo.Addons;
 using Dapplo.Config.Ini.Converters;
 
-#endregion
-
-namespace Dapplo.Frickler.Modules
+namespace Frickler.Modules
 {
     /// <summary>
     ///     Initialize the Configuration framework

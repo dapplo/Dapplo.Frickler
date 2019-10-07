@@ -24,24 +24,28 @@ using Autofac.Features.OwnedInstances;
 using Caliburn.Micro;
 using Dapplo.CaliburnMicro.Extensions;
 using Dapplo.CaliburnMicro.Menu;
-using Dapplo.Frickler.Configuration;
-using Dapplo.Frickler.Ui.ViewModels;
+using Frickler.Configuration;
+using Frickler.Ui.ViewModels;
 using MahApps.Metro.IconPacks;
 
-namespace Dapplo.Frickler.Ui
+namespace Frickler.Ui
 {
     /// <summary>
-    /// Defines the systemtray config menu item
+    /// Defines the system-tray config menu item
     /// </summary>
     [Menu("systemtray")]
-    public sealed class ConfigMenuItem : ClickableMenuItem
+    public sealed class ConfigMenuItem : ClickableMenuItem, IDisposable
     {
+        private readonly IFricklerTranslations _fricklerTranslations;
+        private IDisposable _displayNameBinding;
+
         /// <inheritdoc />
         public ConfigMenuItem(
             IFricklerTranslations fricklerTranslations,
             IWindowManager windowManager,
             Func<Owned<ConfigViewModel>> configViewModelFactory)
         {
+            _fricklerTranslations = fricklerTranslations;
             Style = MenuItemStyles.Default;
             Id = "B_Config";
             Icon = new PackIconMaterial
@@ -59,7 +63,20 @@ namespace Dapplo.Frickler.Ui
 
                 IsEnabled = true;
             };
-            fricklerTranslations.CreateDisplayNameBinding(this, nameof(IFricklerTranslations.Configuration));
+        }
+
+        /// <inheritdoc />
+        public override void Initialize()
+        {
+            base.Initialize();
+            _displayNameBinding = _fricklerTranslations.CreateDisplayNameBinding(this, nameof(IFricklerTranslations.Configuration));
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            _displayNameBinding?.Dispose();
+            _displayNameBinding = null;
         }
     }
 }

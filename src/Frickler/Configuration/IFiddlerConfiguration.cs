@@ -20,16 +20,12 @@
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 // 
 
-#region Usings
-
 using System.ComponentModel;
 using Dapplo.CaliburnMicro.Metro.Configuration;
 using Dapplo.Config.Ini;
 using Dapplo.Config.Ini.Converters;
 
-#endregion
-
-namespace Dapplo.Frickler.Configuration
+namespace Frickler.Configuration
 {
     /// <summary>
     ///     This defines the configuration needed for Fiddler

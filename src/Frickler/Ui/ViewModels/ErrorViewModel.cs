@@ -23,7 +23,7 @@ using System;
 using Caliburn.Micro;
 using Dapplo.CaliburnMicro;
 
-namespace Dapplo.Frickler.Ui.ViewModels
+namespace Frickler.Ui.ViewModels
 {
     /// <summary>
     /// The ViewModel for the errors

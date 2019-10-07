@@ -19,8 +19,6 @@
 // You should have a copy of the GNU Lesser General Public License
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
-#region Usings
-
 using System;
 using System.Globalization;
 using System.Threading;
@@ -30,18 +28,16 @@ using Caliburn.Micro;
 using Dapplo.Addons.Bootstrapper;
 using Dapplo.CaliburnMicro.Dapp;
 using Dapplo.Config.Ini.Converters;
-using Dapplo.Frickler.Ui.ViewModels;
 using Dapplo.Log;
-
-#if DEBUG
 using Dapplo.Log.Loggers;
+using Frickler.Ui.ViewModels;
+#if DEBUG
+
 #else
 using Dapplo.Log.LogFile;
 #endif
 
-#endregion
-
-namespace Dapplo.Frickler
+namespace Frickler
 {
     /// <summary>
     ///     This takes care or starting the Application

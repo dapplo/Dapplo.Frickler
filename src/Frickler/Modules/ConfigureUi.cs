@@ -23,7 +23,7 @@ using System;
 using Dapplo.Addons;
 using Dapplo.CaliburnMicro;
 
-namespace Dapplo.Frickler.Modules
+namespace Frickler.Modules
 {
     /// <inheritdoc />
     [Service(nameof(ConfigureUiDefaults), nameof(CaliburnServices.ConfigurationService), TaskSchedulerName = "ui")]

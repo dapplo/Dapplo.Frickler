@@ -20,15 +20,11 @@
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 // 
 
-#region Usings
-
 using System.ComponentModel;
 using Dapplo.Config.Ini;
 using Dapplo.Log.LogFile;
 
-#endregion
-
-namespace Dapplo.Frickler.Configuration
+namespace Frickler.Configuration
 {
     /// <summary>
     ///     Store all log specific settings, currently only FileLogger settings are here

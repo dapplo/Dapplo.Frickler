@@ -22,7 +22,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Dapplo.Frickler.Extensions
+namespace Frickler.Extensions
 {
     /// <summary>
     /// Describes a change which was made to a dictionary
@@ -122,18 +122,13 @@ namespace Dapplo.Frickler.Extensions
         }
 
         /// <inheritdoc />
-        public override string ToString()
-        {
-            switch (ChangeKind)
+        public override string ToString() =>
+            ChangeKind switch
             {
-                case DictionaryChangeKinds.Added:
-                    return $"{ChangeKind} {Key} = {After}";
-                case DictionaryChangeKinds.Removed:
-                    return $"{ChangeKind} {Key} = {Before}";
-                case DictionaryChangeKinds.Changed:
-                    return $"{ChangeKind} {Key} = {Before} -> {After}";
-            }
-            return string.Empty;
-        }
+                DictionaryChangeKinds.Added => $"{ChangeKind} {Key} = {After}",
+                DictionaryChangeKinds.Removed => $"{ChangeKind} {Key} = {Before}",
+                DictionaryChangeKinds.Changed => $"{ChangeKind} {Key} = {Before} -> {After}",
+                _ => string.Empty,
+            };
     }
 }

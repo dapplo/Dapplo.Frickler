@@ -20,19 +20,15 @@
 // along with Frickler. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 // 
 
-#region Usings
-
 using System;
 using System.Reactive.Disposables;
 using Dapplo.Addons;
 using Dapplo.CaliburnMicro;
-using Dapplo.Frickler.Configuration;
 using Dapplo.Log;
 using Fiddler;
+using Frickler.Configuration;
 
-#endregion
-
-namespace Dapplo.Frickler.Modules
+namespace Frickler.Modules
 {
     /// <summary>
     ///     The actual fiddler code
@@ -234,22 +230,22 @@ namespace Dapplo.Frickler.Modules
         /// <summary>
         ///     Used for logging of request
         /// </summary>
-        /// <param name="oSession">Session</param>
-        private void OnResponseHeadersAvailable(Session oSession)
+        /// <param name="session">Session</param>
+        private void OnResponseHeadersAvailable(Session session)
         {
-            if (oSession?.ResponseHeaders?.HTTPResponseCode == null)
+            if (session?.ResponseHeaders?.HTTPResponseCode == null)
             {
                 return;
             }
-            if (oSession.ResponseHeaders.HTTPResponseCode < 400)
+            if (session.ResponseHeaders.HTTPResponseCode < 400)
             {
                 if (Log.IsVerboseEnabled())
                 {
-                    Log.Verbose().WriteLine("{0}|{1}", oSession.ResponseHeaders.HTTPResponseCode, oSession.fullUrl);
+                    Log.Verbose().WriteLine("{0}|{1}|{2}", session.ResponseHeaders.HTTPResponseCode, session.fullUrl,session.BitFlags);
                 }
                 return;
             }
-            Log.Error().WriteLine("{0}|{1}", oSession.ResponseHeaders.HTTPResponseCode, oSession.fullUrl);
+            Log.Error().WriteLine("{0}|{1}|{2}", session.ResponseHeaders.HTTPResponseCode, session.fullUrl, session.BitFlags);
         }
 
         /// <summary>
